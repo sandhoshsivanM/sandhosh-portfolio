@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Design tokens — Tailwind v4 is CSS-first. There is no tailwind.config.ts.
+ * Anything declared here becomes a utility (--color-ink -> bg-ink, text-ink).
+ * ------------------------------------------------------------------ */
+@theme {
+  /* Surfaces */
+  --color-ink: #0b0f14;
+  --color-surface: #121820;
+  --color-surface-2: #182231;
+  --color-wire: #2a3441;
+
+  /* Type */
+  --color-fg: #e6edf3;
+  --color-muted: #7d8a99;
+  --color-faint: #4a5764;
+
+  /* One accent, plus three hues that encode wire semantics.
+     Colour carries meaning here — it is not decoration. */
+  --color-accent: #38e0b8; /* sync   — HTTP request/response path */
+  --color-cache: #7dd3fc; /* cached — Redis / FusionCache        */
+  --color-async: #fbbf24; /* async  — RabbitMQ / Quartz           */
+  --color-store: #a78bfa; /* store  — SQL Server                  */
+
+  /* Fonts are loaded by next/font in layout.tsx and exposed as vars. */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-accent) 30%, transparent);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Architecture canvas
+ *
+ * ⚠️ INVARIANT — DO NOT ADD padding, border, or min-height TO .arch-canvas.
+ * The SVG wire layer and the HTML card layer stay registered ONLY because
+ * this box's aspect-ratio exactly equals the SVG viewBox aspect-ratio.
+ * Perturb the box and every wire will miss every card — and it will look
+ * like a routing bug, not a CSS bug. Put padding on an outer wrapper.
+ *
+ * container-type MUST be inline-size, never `size`: block containment
+ * collapses an aspect-ratio box to zero height.
+ * ------------------------------------------------------------------ */
+.arch-canvas {
+  container-type: inline-size;
+  /* One design unit, in CSS px. Cards size in these so the data's
+     size.w/h means the same thing to the port router and to the DOM. */
+  --u: calc(100cqw / var(--design-w));
+}
+
+.arch-node__label {
+  font-size: clamp(0.875rem, calc(17 * var(--u)), 1.0625rem);
+}
+
+.arch-node__sublabel {
+  font-size: clamp(0.6875rem, calc(12 * var(--u)), 0.8125rem);
+}
+
+.arch-node__badge {
+  font-size: clamp(0.5625rem, calc(10 * var(--u)), 0.6875rem);
+}
+
+/* Wires ------------------------------------------------------------- */
+.arch-wire {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    opacity 180ms ease,
+    stroke-width 180ms ease;
+}
+
+[data-dim="true"] .arch-wire:not([data-active="true"]) {
+  opacity: 0.12;
+}
+
+[data-dim="true"] .arch-wire[data-active="true"] {
+  stroke-width: 3.25;
+}
+
+.arch-port {
+  transition: opacity 180ms ease;
+}
+
+/* Fade-in covers the one-frame layout swap tablet users see while
+   useSyncExternalStore resolves the real breakpoint. */
+@keyframes arch-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.arch-canvas-in {
+  animation: arch-in 300ms 60ms both;
+}
+
+/* Mobile pipeline — pure CSS packets, no RAF, no JS. */
+@keyframes packet-down {
+  from {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(38px);
+    opacity: 0;
+  }
+}
+
+.pipe-dot {
+  animation: packet-down 2.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipe-dot,
+  .arch-canvas-in {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Utilities
+ * ------------------------------------------------------------------ */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-wire);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-faint);
+}
