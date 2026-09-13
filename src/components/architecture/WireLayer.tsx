@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, type RefObject } from "react";
+import { memo } from "react";
 import type { ResolvedEdge } from "@/lib/architecture/geometry";
 import type { LayoutId } from "@/lib/architecture/types";
 import { DESIGN } from "@/lib/architecture/types";
@@ -72,6 +72,8 @@ export const WireLayer = memo(function WireLayer({
         />
       ))}
 
+      {children}
+
       {edges.map((re) =>
         re.edge.label ? (
           <g
@@ -80,15 +82,6 @@ export const WireLayer = memo(function WireLayer({
               re.labelAngle === 90 ? " rotate(-90)" : ""
             }`}
           >
-            {/* Knockout so the wire doesn't run through the glyphs. */}
-            <rect
-              x={-(re.edge.label.length * 3.6 + 8)}
-              y={-9}
-              width={re.edge.label.length * 7.2 + 16}
-              height={18}
-              rx={4}
-              fill="var(--color-ink)"
-            />
             <text
               textAnchor="middle"
               dominantBaseline="central"
@@ -102,8 +95,6 @@ export const WireLayer = memo(function WireLayer({
           </g>
         ) : null,
       )}
-
-      {children}
     </svg>
   );
 });

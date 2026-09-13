@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useCanvasActivity } from "@/hooks/useCanvasActivity";
-import { useLayoutId } from "@/hooks/useLayoutId";
 import { resolveEdge } from "@/lib/architecture/geometry";
 import {
   ARCH_GRAPH,
@@ -23,7 +22,9 @@ interface Props {
 }
 
 export function ArchitectureCanvas({ openView, onOpen }: Props) {
-  const layoutId = useLayoutId();
+  // Single authored layout; below 1024px MobilePipeline replaces this whole
+  // component, so there is no variant to resolve at runtime.
+  const layoutId = "lg" as const;
   const reduce = useReducedMotion();
   const canvasRef = useRef<HTMLDivElement>(null);
   const running = useCanvasActivity(canvasRef);
@@ -104,7 +105,7 @@ export function ArchitectureCanvas({ openView, onOpen }: Props) {
               speedFor={speedFor}
               dimFor={dimFor}
               running={running}
-              packetScale={layoutId === "lg" ? 1 : 0.5}
+              packetScale={1}
             />
           )}
         </WireLayer>

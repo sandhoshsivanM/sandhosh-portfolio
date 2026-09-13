@@ -3,8 +3,14 @@
 /* ------------------------------------------------------------------ *
  * Design tokens — Tailwind v4 is CSS-first. There is no tailwind.config.ts.
  * Anything declared here becomes a utility (--color-ink -> bg-ink, text-ink).
+ *
+ * `static` is required, not stylistic: by default v4 only emits theme
+ * variables it can see used in a class. The wire and packet colours are
+ * referenced as inline `var(--color-cache)` strings inside SVG attributes,
+ * which the scanner cannot detect — without `static` those variables are
+ * tree-shaken away and the wires render with `stroke: none`.
  * ------------------------------------------------------------------ */
-@theme {
+@theme static {
   /* Surfaces */
   --color-ink: #0b0f14;
   --color-surface: #121820;

@@ -144,8 +144,8 @@ export const StaticPackets = memo(function StaticPackets({ edges }: { edges: Res
       {edges.map((re) => (
         <circle
           key={re.edge.id}
-          cx={re.labelAt.x}
-          cy={re.labelAt.y}
+          cx={re.midpoint.x}
+          cy={re.midpoint.y}
           r={4}
           fill={`var(--color-${re.edge.accent})`}
           opacity={0.9}

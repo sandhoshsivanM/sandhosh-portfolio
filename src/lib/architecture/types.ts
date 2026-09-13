@@ -1,6 +1,12 @@
 import type { LucideIcon } from "lucide-react";
 
-export type LayoutId = "lg" | "md";
+/**
+ * Only one authored layout. Below 1024px the diagram is replaced wholesale by
+ * MobilePipeline rather than reflowed — a 7-node DAG squeezed into a portrait
+ * box is a mess, not a diagram, and maintaining a second set of coordinates
+ * (plus per-layout port sides) bought nothing the pipeline doesn't already do.
+ */
+export type LayoutId = "lg";
 export type Side = "left" | "right" | "top" | "bottom";
 
 /** Wire semantics. Colour carries meaning here — it is not decoration. */
@@ -21,8 +27,7 @@ export interface Pt {
  * `.arch-canvas` comment in globals.css.
  */
 export const DESIGN: Record<LayoutId, { w: number; h: number }> = {
-  lg: { w: 1200, h: 760 },
-  md: { w: 900, h: 1120 },
+  lg: { w: 1280, h: 720 },
 };
 
 interface ArchNodeBase {

@@ -1,63 +1,50 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { CONTACT, PROFILE } from "@/content/profile";
-import { isViewId } from "@/lib/architecture/views";
-import { isNavNode, type ArchNode, type ViewId } from "@/lib/architecture/types";
+import { useViewParam } from "@/hooks/useViewParam";
+import { isNavNode, type ArchNode } from "@/lib/architecture/types";
 import { ArchitectureCanvas } from "./ArchitectureCanvas";
 import { MobilePipeline } from "./MobilePipeline";
 import { SectionPanel } from "./SectionPanel";
 
+/** Where the panel should fly in from — captured at click time for the FLIP. */
+interface FlipOrigin {
+  x: number;
+  y: number;
+}
+
 export function ArchitectureShell() {
-  const [view, setView] = useState<ViewId | null>(null);
-  const originRect = useRef<DOMRect | null>(null);
+  const [view, setView] = useViewParam();
+  // State, not a ref: this is read during render to build the enter animation,
+  // and it is written in the same handler that opens the view.
+  const [origin, setOrigin] = useState<FlipOrigin | null>(null);
   const reduce = useReducedMotion();
 
-  // Read the initial view from the URL after mount so the server render stays
-  // deterministic.
-  useEffect(() => {
-    const v = new URLSearchParams(window.location.search).get("v");
-    if (isViewId(v)) setView(v);
-  }, []);
+  const onOpen = useCallback(
+    (node: ArchNode, e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (!isNavNode(node)) return;
+      // Let the browser handle modified clicks — these are real links.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      // One layout read, in an event handler — never in a frame loop.
+      const r = e.currentTarget.getBoundingClientRect();
+      setOrigin({
+        x: r.left + r.width / 2 - window.innerWidth / 2,
+        y: r.top + r.height / 2 - window.innerHeight / 2,
+      });
+      setView(node.view);
+    },
+    [setView],
+  );
 
-  useEffect(() => {
-    const onPop = () => {
-      const v = new URLSearchParams(window.location.search).get("v");
-      setView(isViewId(v) ? v : null);
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, []);
+  const onClose = useCallback(() => setView(null), [setView]);
 
-  const onOpen = useCallback((node: ArchNode, e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!isNavNode(node)) return;
-    // Let the browser handle modified clicks — these are real links.
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-    e.preventDefault();
-    // One layout read, in an event handler — never in a frame loop.
-    originRect.current = e.currentTarget.getBoundingClientRect();
-    setView(node.view);
-    // A search param on the same pathname: pushing a real path would make
-    // Next's own popstate handler race ours and double-mount the panel.
-    window.history.pushState(null, "", `/?v=${node.view}`);
-  }, []);
-
-  const onClose = useCallback(() => {
-    setView(null);
-    window.history.pushState(null, "", "/");
-  }, []);
-
-  const r = originRect.current;
   const initial =
-    reduce || !r
+    reduce || !origin
       ? { opacity: 0, scale: 1, x: 0, y: 0 }
-      : {
-          opacity: 0,
-          scale: 0.9,
-          x: r.left + r.width / 2 - window.innerWidth / 2,
-          y: r.top + r.height / 2 - window.innerHeight / 2,
-        };
+      : { opacity: 0, scale: 0.9, x: origin.x, y: origin.y };
 
   return (
     <main className="relative min-h-dvh overflow-hidden">
@@ -94,17 +81,17 @@ export function ArchitectureShell() {
 
         <div className="flex flex-1 items-center py-8">
           {/* Padding lives here, never on .arch-canvas. */}
-          <div className="hidden w-full md:block">
+          <div className="mx-auto hidden w-full max-w-[1180px] lg:block">
             <ArchitectureCanvas openView={view} onOpen={onOpen} />
           </div>
-          <div className="w-full md:hidden">
+          <div className="w-full lg:hidden">
             <MobilePipeline onOpen={onOpen} />
           </div>
         </div>
 
         <footer className="flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-faint">
-          <p className="hidden md:block">hover a node · click to open</p>
-          <p className="md:hidden">tap a service to open</p>
+          <p className="hidden lg:block">hover a node · click to open</p>
+          <p className="lg:hidden">tap a service to open</p>
           <p>{PROFILE.subtitle}</p>
         </footer>
       </div>

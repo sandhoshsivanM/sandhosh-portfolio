@@ -11,6 +11,8 @@ const SIDE_VEC: Record<Side, Pt> = {
 const STUB = 30;
 /** Corner radius, clamped per-corner to half the shorter adjacent segment. */
 const RADIUS = 18;
+/** How far a label sits off the wire it annotates. */
+const LABEL_OFFSET = 14;
 
 /** 2dp keeps `d` strings short and byte-identical between server and client. */
 const f = (n: number) => (Math.round(n * 100) / 100).toString();
@@ -110,6 +112,7 @@ export interface ResolvedEdge {
   /** Midpoint of the longest straight run, unless overridden on the edge. */
   labelAt: Pt;
   labelAngle: 0 | 90;
+  midpoint: Pt;
 }
 
 export function resolveEdge(
@@ -140,6 +143,15 @@ export function resolveEdge(
   }
   const p0 = points[bi];
   const p1 = points[bi + 1];
+  const horizontal = Math.abs(p1.x - p0.x) >= Math.abs(p1.y - p0.y);
+
+  // Sit the label beside the wire rather than on it. Centred labels need a
+  // knockout rect to stay readable, and packets then travel straight through
+  // them; an offset avoids both problems.
+  const auto: Pt = {
+    x: (p0.x + p1.x) / 2 + (horizontal ? 0 : LABEL_OFFSET),
+    y: (p0.y + p1.y) / 2 - (horizontal ? LABEL_OFFSET : 0),
+  };
 
   return {
     edge,
@@ -147,7 +159,9 @@ export function resolveEdge(
     points,
     start: s,
     end: e,
-    labelAt: edge.labelAt?.[layout] ?? { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 },
-    labelAngle: Math.abs(p1.x - p0.x) >= Math.abs(p1.y - p0.y) ? 0 : 90,
+    labelAt: edge.labelAt?.[layout] ?? auto,
+    labelAngle: horizontal ? 0 : 90,
+    /** Midpoint on the wire itself — used by the reduced-motion static dots. */
+    midpoint: { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 },
   };
 }

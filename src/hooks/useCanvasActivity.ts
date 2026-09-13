@@ -34,7 +34,7 @@ export function useCanvasActivity(ref: RefObject<Element | null>): boolean {
   }, []);
 
   useEffect(() => {
-    const wide = window.matchMedia("(min-width: 768px)");
+    const wide = window.matchMedia("(min-width: 1024px)");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => {
       setWideEnough(wide.matches);

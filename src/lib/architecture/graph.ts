@@ -8,6 +8,10 @@ import type { ArchGraph, ArchNode, ViewId } from "./types";
  *
  * Coordinates are hand-authored, not force-directed. For seven nodes that is
  * strictly better: it lets us choose which wires cross.
+ *
+ * Spacing rule: every gap between two card edges is >= 105 design units. The
+ * router burns 30 at each end on stubs, so anything tighter leaves no straight
+ * run and the edge label ends up sitting on top of a card.
  */
 export const ARCH_GRAPH: ArchGraph = {
   nodes: [
@@ -20,8 +24,8 @@ export const ARCH_GRAPH: ArchGraph = {
       badge: "500+ users",
       icon: Layers,
       accent: "accent",
-      size: { w: 208, h: 92 },
-      layout: { lg: { x: 140, y: 300 }, md: { x: 210, y: 110 } },
+      size: { w: 180, h: 82 },
+      layout: { lg: { x: 120, y: 340 } },
       view: "about",
       href: "/about",
       srHint: "React front end — open the About section",
@@ -40,8 +44,8 @@ export const ARCH_GRAPH: ArchGraph = {
       badge: "3+ yrs",
       icon: Cloud,
       accent: "accent",
-      size: { w: 216, h: 92 },
-      layout: { lg: { x: 420, y: 300 }, md: { x: 650, y: 260 } },
+      size: { w: 190, h: 82 },
+      layout: { lg: { x: 430, y: 340 } },
       view: "experience",
       href: "/experience",
       srHint: "API gateway — open the Experience section",
@@ -60,8 +64,8 @@ export const ARCH_GRAPH: ArchGraph = {
       badge: "975+ controllers",
       icon: Server,
       accent: "accent",
-      size: { w: 248, h: 112 },
-      layout: { lg: { x: 700, y: 300 }, md: { x: 300, y: 500 } },
+      size: { w: 220, h: 100 },
+      layout: { lg: { x: 760, y: 340 } },
       tooltip: {
         side: "top",
         title: "The monolith that behaves",
@@ -77,8 +81,8 @@ export const ARCH_GRAPH: ArchGraph = {
       badge: "30% faster",
       icon: Boxes,
       accent: "cache",
-      size: { w: 208, h: 92 },
-      layout: { lg: { x: 1000, y: 128 }, md: { x: 660, y: 660 } },
+      size: { w: 180, h: 82 },
+      layout: { lg: { x: 760, y: 130 } },
       view: "skills",
       href: "/skills",
       srHint: "Redis cache — open the Skills section",
@@ -97,8 +101,8 @@ export const ARCH_GRAPH: ArchGraph = {
       badge: "1,170+ entities",
       icon: Database,
       accent: "store",
-      size: { w: 224, h: 92 },
-      layout: { lg: { x: 1000, y: 300 }, md: { x: 300, y: 860 } },
+      size: { w: 190, h: 82 },
+      layout: { lg: { x: 1140, y: 340 } },
       view: "cases",
       href: "/case-studies",
       srHint: "SQL Server — open the Case Studies section",
@@ -117,8 +121,8 @@ export const ARCH_GRAPH: ArchGraph = {
       badge: "async",
       icon: MessageSquare,
       accent: "async",
-      size: { w: 216, h: 92 },
-      layout: { lg: { x: 1000, y: 472 }, md: { x: 660, y: 860 } },
+      size: { w: 190, h: 82 },
+      layout: { lg: { x: 1140, y: 580 } },
       view: "projects",
       href: "/projects",
       srHint: "RabbitMQ event bus — open the Projects section",
@@ -136,8 +140,8 @@ export const ARCH_GRAPH: ArchGraph = {
       sublabel: "SMTP · 202 Accepted",
       icon: Send,
       accent: "accent",
-      size: { w: 188, h: 84 },
-      layout: { lg: { x: 700, y: 592 }, md: { x: 450, y: 1030 } },
+      size: { w: 196, h: 76 },
+      layout: { lg: { x: 430, y: 590 } },
       view: "contact",
       href: "/contact",
       srHint: "Send a message — open the Contact section",
@@ -169,16 +173,17 @@ export const ARCH_GRAPH: ArchGraph = {
       accent: "accent",
     },
 
-    // Anti-parallel pair: separated by both a port slide and a lane offset.
+    // Anti-parallel pair. Redis sits directly above the API, so the slides are
+    // chosen to land both ports on the same x — giving two clean parallel
+    // verticals 64u apart rather than one wire drawn over the other.
     {
       id: "e-api-redis",
       from: "api",
-      fromSide: "right",
-      fromSlide: -24,
+      fromSide: "top",
+      fromSlide: -32,
       to: "redis",
-      toSide: "left",
-      toSlide: -16,
-      lane: -14,
+      toSide: "bottom",
+      toSlide: 32,
       label: "GET",
       packets: 2,
       speed: 300,
@@ -187,12 +192,11 @@ export const ARCH_GRAPH: ArchGraph = {
     {
       id: "e-redis-api",
       from: "redis",
-      fromSide: "left",
-      fromSlide: 16,
+      fromSide: "bottom",
+      fromSlide: -32,
       to: "api",
-      toSide: "right",
-      toSlide: 24,
-      lane: 14,
+      toSide: "top",
+      toSlide: 32,
       label: "HIT",
       packets: 1,
       speed: 300,
