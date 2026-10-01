@@ -243,6 +243,20 @@ html {
   }
 }
 
+/* Form fields: lift onto a hard ink shadow while typing. */
+.field {
+  transition:
+    transform 180ms var(--ease-out),
+    box-shadow 180ms var(--ease-out),
+    background-color 180ms;
+}
+.field:focus {
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 var(--color-frame);
+  border-color: var(--color-frame);
+  background: #fffef8;
+}
+
 /* Patrick Hand ships no fi/fl ligature glyphs; without this "fill" renders a box. */
 .font-print {
   font-variant-ligatures: none;
