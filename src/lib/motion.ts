@@ -21,4 +21,4 @@ export const slap: Variants = {
   show: (r: number = 0) => ({ opacity: 1, scale: 1, rotate: r, transition: springPop }),
 };
 
-export const inView = { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.25 } } as const;
+export const inView = { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.1 } } as const;

@@ -8,7 +8,7 @@ import { SectionHead } from "@/components/ui/SectionHead";
 
 export function About() {
   return (
-    <section id="about" className="py-20 md:py-[120px]">
+    <section id="about" className="scroll-mt-16 py-12 sm:py-16 md:py-24 lg:py-[120px]">
       <div className="container-page">
         <SectionHead eyebrow="About" script="Hi," title="I'm Sandhoshsivan." />
 
@@ -18,7 +18,7 @@ export function About() {
             className="relative"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease }}
           >
             <div aria-hidden className="sketch absolute inset-0 -rotate-1" />
@@ -73,7 +73,7 @@ export function About() {
             className="relative mx-auto w-full max-w-[340px]"
             initial={{ opacity: 0, y: -40, rotate: 0 }}
             whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ ...springPop, stiffness: 160 }}
           >
             <div className="sketch relative -rotate-2 p-3 pb-14">

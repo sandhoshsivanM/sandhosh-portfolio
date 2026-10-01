@@ -7,24 +7,24 @@ import { SectionHead } from "@/components/ui/SectionHead";
 
 export function Toolbox() {
   return (
-    <section id="toolbox" className="py-20 md:py-[120px]">
+    <section id="toolbox" className="scroll-mt-16 py-12 sm:py-16 md:py-24 lg:py-[120px]">
       <div className="container-page">
         <SectionHead eyebrow="Toolbox" title="Grouped by what they're for." paper="/assets/paper/torn-blue-grid-sm.webp" />
-        <ul className="grid auto-rows-fr gap-x-5 gap-y-12 md:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid auto-rows-fr grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-12 lg:grid-cols-4">
           {toolbox.map((b, i) => (
             <motion.li
               key={b.title}
-              className="card relative flex flex-col p-6 pt-14"
+              className="card relative flex flex-col p-4 pt-11 sm:p-6 sm:pt-14"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, ease, delay: i * 0.08 }}
             >
-              <div className="absolute -top-6 left-5 flex">
+              <div className="absolute -top-5 left-3 flex sm:-top-6 sm:left-5">
                 {(b.game ? ["gamepad"] : b.stickers).map((s, j) => (
                   <motion.div
                     key={s}
-                    className="-ml-2 w-14 first:ml-0"
+                    className="-ml-2 w-11 first:ml-0 sm:w-14"
                     initial={{ scale: 1.4, opacity: 0, rotate: 0 }}
                     whileInView={{ scale: 1, opacity: 1, rotate: j % 2 ? 8 : -8 }}
                     viewport={{ once: true }}
@@ -35,10 +35,10 @@ export function Toolbox() {
                   </motion.div>
                 ))}
               </div>
-              <h3 className="h3">{b.title}</h3>
-              <div className="mt-4 flex flex-wrap gap-1.5">
+              <h3 className="font-display text-[16px] font-bold leading-tight tracking-tight sm:text-[clamp(20px,2vw,24px)]">{b.title}</h3>
+              <div className="mt-3 flex flex-wrap gap-1 sm:mt-4 sm:gap-1.5">
                 {b.tools.map((t) => (
-                  <span key={t} className="chip text-ink">
+                  <span key={t} className="chip px-2 text-[11px] text-ink sm:px-2.5 sm:text-[12px]">
                     {t}
                   </span>
                 ))}

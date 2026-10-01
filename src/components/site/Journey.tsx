@@ -11,7 +11,7 @@ export function Journey() {
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
 
   return (
-    <section id="journey" className="py-20 md:py-[120px]">
+    <section id="journey" className="scroll-mt-16 py-12 sm:py-16 md:py-24 lg:py-[120px]">
       <div className="container-page">
         <SectionHead eyebrow="Journey" title="How I got here." paper="/assets/paper/torn-yellow-grid-sm.webp" />
         <ol ref={ref} className="relative grid gap-8 lg:grid-cols-6 lg:gap-4">

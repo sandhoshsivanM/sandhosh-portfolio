@@ -8,7 +8,7 @@ import { UnderTheHood } from "@/components/ui/UnderTheHood";
 
 export function Projects() {
   return (
-    <section id="projects" className="py-20 md:py-[120px]">
+    <section id="projects" className="scroll-mt-16 py-12 sm:py-16 md:py-24 lg:py-[120px]">
       <div className="container-page">
         <SectionHead eyebrow="After hours" title="Things I build for fun." paper="/assets/paper/torn-purple-sm.webp" />
         <ul className="grid auto-rows-fr gap-8 lg:grid-cols-2">
@@ -18,7 +18,7 @@ export function Projects() {
               className="flex"
               initial={{ opacity: 0, scale: 0.96, y: 20 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.5, ease, delay: i * 0.1 }}
             >
               <AppWindow title={p.file} className="w-full">

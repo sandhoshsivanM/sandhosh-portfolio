@@ -17,7 +17,7 @@ const handles = ["-left-[5px] -top-[5px]", "-right-[5px] -top-[5px]", "-left-[5p
 
 /** Figma-style selection: blue outline draws, handles pop, fill wipes in, content slides up. */
 export function SelectionFrame({ children, label, fill = "var(--color-accent)", delay = 0, className = "", onView }: Props) {
-  const trigger = onView ? { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.6 } } : { initial: "hidden", animate: "show" };
+  const trigger = onView ? { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.1 } } : { initial: "hidden", animate: "show" };
   return (
     <motion.div className={`relative inline-block ${className}`} {...trigger}>
       <motion.span

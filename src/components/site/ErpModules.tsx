@@ -1,17 +1,19 @@
 "use client";
 import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { erpModules, type ErpScreen } from "@/content/erp";
 import { ease, springPop } from "@/lib/motion";
 import { SectionHead } from "@/components/ui/SectionHead";
+import { SwipeDots } from "@/components/ui/SwipeDots";
 import { UnderTheHood } from "@/components/ui/UnderTheHood";
 
 const TILT = [-1.6, 1.2, -0.8, 1.4, -1.2, 0.9];
-const show = { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.5 } } as const;
+const show = { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.1 } } as const;
 
 export function ErpModules() {
+  const list = useRef<HTMLUListElement>(null);
   return (
-    <section id="work" className="py-20 md:py-[120px]">
+    <section id="work" className="scroll-mt-16 py-12 sm:py-16 md:py-24 lg:py-[120px]">
       <div className="container-page">
         <SectionHead
           eyebrow="What I built"
@@ -19,14 +21,16 @@ export function ErpModules() {
           lead="HR, buying, money, buildings, safety and paperwork for a 2,000-person company. I built the backend for all of it."
           paper="/assets/paper/torn-blue-grid-sm.webp"
         />
-        <ul className="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+        {/* phones: swipe sideways through the six cards; tablets/desktop: grid */}
+        <p className="mb-1 font-hand text-[19px] text-ink-2 md:hidden">Swipe through the six worlds →</p>
+        <ul ref={list} aria-label="ERP modules" className="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3 max-md:-mx-4 max-md:flex max-md:snap-x max-md:snap-mandatory max-md:gap-5 max-md:overflow-x-auto max-md:px-4 max-md:pb-5 max-md:pt-7 max-md:[scrollbar-width:none] max-md:[&::-webkit-scrollbar]:hidden">
           {erpModules.map((m, i) => (
             <motion.li
               key={m.title}
-              className="relative flex"
+              className="relative flex max-md:w-[84%] max-md:max-w-[340px] max-md:shrink-0 max-md:snap-center"
               initial={{ opacity: 0, y: -30, rotate: 0 }}
               whileInView={{ opacity: 1, y: 0, rotate: TILT[i] }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ ...springPop, stiffness: 170, delay: (i % 3) * 0.08 }}
             >
               <article className="erp-card relative flex w-full min-w-0 flex-col px-4 pb-5 pt-7 min-[380px]:px-6">
@@ -65,6 +69,7 @@ export function ErpModules() {
             </motion.li>
           ))}
         </ul>
+        <SwipeDots list={list} count={erpModules.length} label="ERP modules" />
       </div>
     </section>
   );
