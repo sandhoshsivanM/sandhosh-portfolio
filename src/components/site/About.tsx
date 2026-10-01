@@ -10,7 +10,7 @@ export function About() {
   return (
     <section id="about" className="py-20 md:py-[120px]">
       <div className="container-page">
-        <SectionHead eyebrow="About" script="Hi," title="I'm Sandhosh." />
+        <SectionHead eyebrow="About" script="Hi," title="I'm Sandhoshsivan." />
 
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
           {/* Work side: the taped letter */}
