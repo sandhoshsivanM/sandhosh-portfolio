@@ -7,16 +7,18 @@ npm install
 npm run dev
 ```
 
-## Deploy (Vercel)
+## Deploy
 
-Every push to `main` deploys to production; every pull request gets its own preview link.
+Live at **https://sandhoshsivanm.github.io**.
 
-The site's public address comes from `src/lib/site.ts`:
+Every push to `main` runs `.github/workflows/deploy.yml`: it builds the static site (`out/`) and
+force-pushes it to the `sandhoshsivanM/sandhoshsivanM.github.io` repo, which GitHub Pages serves.
+The workflow authenticates with the `PAGES_DEPLOY_KEY` secret (a write deploy key on that repo).
+Never edit the `.github.io` repo by hand; the next deploy overwrites it.
 
-1. `NEXT_PUBLIC_SITE_URL`, if set in Vercel's environment variables, or
-2. Vercel's production domain (`VERCEL_PROJECT_PRODUCTION_URL`), which follows a custom domain once one is added.
-
-So adding a custom domain later needs no code change: add it under Project → Settings → Domains and redeploy.
+The public address used for canonical links, link previews and the sitemap comes from
+`src/lib/site.ts` (`NEXT_PUBLIC_SITE_URL`, set in the workflow). For a custom domain later: add a
+`public/CNAME` file with the domain, point its DNS at GitHub Pages, and change `NEXT_PUBLIC_SITE_URL`.
 
 ## Assets
 

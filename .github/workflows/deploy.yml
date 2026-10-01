@@ -1,0 +1,46 @@
+# Builds the static site and publishes it to https://sandhoshsivanm.github.io
+# (the sandhoshsivanM/sandhoshsivanM.github.io repo, served by GitHub Pages).
+# Needs the PAGES_DEPLOY_KEY secret: the private half of a write deploy key on that repo.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://sandhoshsivanm.github.io
+
+      - name: Publish out/ to sandhoshsivanM.github.io
+        env:
+          DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/pages_key
+          chmod 600 ~/.ssh/pages_key
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/pages_key -o StrictHostKeyChecking=accept-new"
+          cd out
+          git init -q -b main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA::7} from sandhosh-portfolio"
+          git push -f git@github.com:sandhoshsivanM/sandhoshsivanM.github.io.git main
