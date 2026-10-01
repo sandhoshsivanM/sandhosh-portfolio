@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw asset sources (~95 MB of PNGs); cleaned exports live in public/assets
+/Assets/
+/references/assets-raw/
+
+# python
+__pycache__/

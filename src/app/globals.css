@@ -1,1 +1,328 @@
 @import "tailwindcss";
+
+/* Design tokens (build guide, chapter 02). Change them here, never inside a component. */
+@theme {
+  --color-paper: #f4f2ec;
+  --color-paper-2: #ebe8df;
+  --color-ink: #141210;
+  --color-ink-2: #5e5950;
+  --color-ink-3: #9a948a;
+  --color-line: rgb(20 18 16 / 0.12);
+  --color-accent: #ff5b1f;
+  --color-sun: #ffc53d;
+  --color-frame: #2f7bf5;
+  --color-success: #1e9e6a;
+  --color-note-yellow: #ffe88a;
+  --color-note-peach: #ffd2bc;
+  --color-note-mint: #cfebda;
+  --color-note-sky: #d6e2ff;
+  --color-night: #0e0b1f;
+  --color-neon: #7cf2c8;
+  --color-neon-pink: #ff4fd8;
+
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
+  --font-sans: var(--font-instrument), system-ui, sans-serif;
+  --font-hand: var(--font-caveat), cursive;
+  --font-print: var(--font-patrick), cursive;
+  --font-sign: var(--font-dafoe), cursive;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-pixel: var(--font-pixel), monospace;
+
+  --radius-card: 20px;
+  --radius-window: 18px;
+  --radius-wall: 26px;
+
+  --shadow-soft: 0 1px 0 rgb(0 0 0 / 0.04), 0 18px 40px -18px rgb(30 20 10 / 0.28);
+  --shadow-sticker: 0 1px 1px rgb(0 0 0 / 0.08), 0 10px 22px -8px rgb(40 20 10 / 0.38);
+  --shadow-hard: 8px 8px 0 #141210;
+  --shadow-ink: 3px 4px 0 #141210;
+  --radius-wobble: 14px 22px 16px 24px / 22px 14px 24px 16px;
+  --radius-wobble-pill: 255px 18px 225px 18px / 18px 225px 18px 255px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --wall: linear-gradient(120deg, #f48a5a 0%, #ef5a3c 28%, #df3f68 55%, #a83fa8 80%, #6e44d6 100%);
+}
+
+html {
+  overflow-x: clip;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: var(--color-paper);
+  /* graph paper */
+  background-image:
+    linear-gradient(rgb(20 18 16 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(20 18 16 / 0.055) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+
+/* Keyboard focus: the blue selection frame with corner handles. */
+:focus-visible {
+  outline: 1.5px solid var(--color-frame);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 24px;
+    }
+  }
+  @media (min-width: 1280px) {
+    .container-page {
+      padding-inline: 32px;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-2);
+  }
+
+  .h-hero {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(52px, 10vw, 124px);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+  }
+  .h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+  .h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(20px, 2vw, 24px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  /* Hand-drawn card: paper, ink outline, wobbly corners, hard ink shadow.
+     Same language as the die-cut stickers. */
+  .card,
+  .sketch {
+    background: #fffdf7 url(/assets/paper/texture-sm.webp) center / 420px auto;
+    border: 2px solid var(--color-ink);
+    border-radius: var(--radius-wobble);
+    box-shadow: var(--shadow-ink);
+  }
+  /* ERP card, drawn to the mockups: navy ink outline and a heavy offset shadow. */
+  .erp-card {
+    background: #fbf6ea url(/assets/paper/texture-sm.webp) center / 420px auto;
+    border: 2.5px solid #1d2433;
+    border-radius: 18px;
+    box-shadow: 9px 10px 0 #1d2433;
+  }
+  .sketch-pill {
+    border: 2px solid var(--color-ink);
+    border-radius: var(--radius-wobble-pill);
+    box-shadow: var(--shadow-ink);
+  }
+
+  /* Hand-drawn underline that draws in on hover. */
+  .link-draw {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1.5px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 300ms var(--ease-out);
+  }
+  .link-draw:hover {
+    background-size: 100% 1.5px;
+  }
+
+  /* Masking tape from the tape sheet; .tape-2/3/4 vary the strip. */
+  .tape {
+    position: absolute;
+    height: 34px;
+    width: 120px;
+    background: url(/assets/tape/tape-06-sm.webp) center / contain no-repeat;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18));
+    pointer-events: none;
+  }
+  .tape-2 {
+    background-image: url(/assets/tape/tape-09-sm.webp);
+  }
+  .tape-3 {
+    background-image: url(/assets/tape/tape-12-sm.webp);
+  }
+  .tape-4 {
+    background-image: url(/assets/tape/tape-05-sm.webp);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 22px;
+    border: 2px solid var(--color-ink);
+    border-radius: var(--radius-wobble-pill);
+    box-shadow: var(--shadow-ink);
+    font-weight: 600;
+    font-size: 15px;
+    transition:
+      transform 150ms var(--ease-out),
+      box-shadow 150ms var(--ease-out),
+      background-color 150ms;
+    will-change: transform;
+  }
+  .btn:hover {
+    transform: translate(-1px, -2px);
+    box-shadow: 4px 6px 0 var(--color-ink);
+  }
+  .btn:active {
+    transform: translate(2px, 3px);
+    box-shadow: 1px 1px 0 var(--color-ink);
+  }
+  .btn-ink {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    box-shadow: 3px 4px 0 var(--color-accent);
+  }
+  .btn-ink:hover {
+    box-shadow: 4px 6px 0 var(--color-accent);
+  }
+  .btn-ghost {
+    background: #fffdf7;
+  }
+  .btn-ghost:hover {
+    background: var(--color-note-yellow);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: var(--radius-wobble-pill);
+    border: 1.5px solid var(--color-ink);
+    background: #fffdf7;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-ink-2);
+    white-space: nowrap;
+  }
+}
+
+/* Patrick Hand ships no fi/fl ligature glyphs; without this "fill" renders a box. */
+.font-print {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
+}
+
+/* CRT scanlines for Player 2. */
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 3px);
+  border-radius: inherit;
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: ticker 38s linear infinite;
+}
+
+/* Idle loops run in CSS so they stay on the compositor. */
+@keyframes float-y {
+  50% {
+    transform: translateY(-7px);
+  }
+}
+.float-y {
+  animation: float-y 4.2s ease-in-out infinite;
+}
+@keyframes drift {
+  33% {
+    transform: translate(10px, -6px);
+  }
+  66% {
+    transform: translate(-4px, 4px);
+  }
+}
+.drift {
+  animation: drift 7s ease-in-out infinite;
+}
+@keyframes scan {
+  50% {
+    transform: translateY(var(--scan-h, 100px));
+  }
+}
+.scan {
+  animation: scan 2.4s ease-in-out infinite;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+.caret::after {
+  content: "▍";
+  margin-left: 2px;
+  animation: caret 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .ticker-track,
+  .float-y,
+  .drift,
+  .scan {
+    animation: none;
+  }
+}
