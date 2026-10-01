@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Caveat, Instrument_Sans, JetBrains_Mono, Mr_Dafoe, Patrick_Hand, Press_Start_2P } from "next/font/google";
 import { profile } from "@/content/profile";
 import { loaderBootScript } from "@/lib/intro";
+import { siteUrl } from "@/lib/site";
 import { Providers } from "@/components/ui/Providers";
 import "./globals.css";
 
@@ -14,9 +15,20 @@ const patrick = Patrick_Hand({ subsets: ["latin"], weight: "400", variable: "--f
 const pixel = Press_Start_2P({ subsets: ["latin"], weight: "400", variable: "--font-pixel" });
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: profile.seo.title,
   description: profile.seo.description,
-  openGraph: { title: profile.seo.title, description: profile.seo.description, type: "website" },
+  alternates: { canonical: "/" },
+  authors: [{ name: profile.name, url: profile.links.linkedin }],
+  openGraph: {
+    type: "profile",
+    url: "/",
+    siteName: profile.name,
+    title: profile.seo.title,
+    description: profile.seo.description,
+    locale: "en_IN",
+  },
+  twitter: { card: "summary_large_image", title: profile.seo.title, description: profile.seo.description },
 };
 
 export const viewport: Viewport = { themeColor: "#f4f2ec" };
