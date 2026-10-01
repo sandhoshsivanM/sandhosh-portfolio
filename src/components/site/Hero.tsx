@@ -4,7 +4,7 @@ import { motion, useReducedMotion, useTransform } from "framer-motion";
 import { profile } from "@/content/profile";
 import { useEyeFollow } from "@/hooks/useEyeFollow";
 import { useIntroReady } from "@/lib/intro";
-import { ease, springPop } from "@/lib/motion";
+import { ease } from "@/lib/motion";
 import { NamedCursor } from "@/components/ui/NamedCursor";
 import { SelectionFrame } from "@/components/ui/SelectionFrame";
 import { Sticker } from "@/components/ui/Sticker";
@@ -22,16 +22,14 @@ const STICKERS = [
 ] as const;
 
 const WALL_H = "clamp(240px, 30vw, 360px)";
-// The anchor is wider than the boy so the hands can rest beside his shoulders.
-const BOY_W = "clamp(290px, 40vw, 440px)";
 
 const showClass = { all: "", tablet: "max-md:hidden", desktop: "max-lg:hidden" } as const;
 
 export function Hero() {
   const ready = useIntroReady();
   const reduce = useReducedMotion();
-  const { ref: faceRef, x: eyeX, y: eyeY } = useEyeFollow<HTMLDivElement>(9);
-  const tilt = useTransform(eyeX, (v) => v * 0.5);
+  const { ref: faceRef, x: eyeX } = useEyeFollow<HTMLDivElement>(6);
+  const tilt = useTransform(eyeX, (v) => v * 0.35);
   const state = ready ? "show" : "hidden";
 
   return (
@@ -103,36 +101,20 @@ export function Hero() {
             )}
           </div>
 
-          {/* The boy and his hands share one anchor at the ledge, so they scale and line up together. */}
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2" style={{ width: BOY_W }}>
-            {/* window: everything below the ledge is cut off */}
-            <div className="absolute inset-x-[-15%] bottom-0 overflow-hidden" style={{ height: `calc(${WALL_H} + 40px)` }}>
-              <motion.div
-                ref={faceRef}
-                className="absolute bottom-0 left-[28.85%] w-[42.3%]"
-                initial={{ y: "70%" }}
-                animate={ready ? { y: "40%" } : undefined}
-                transition={{ type: "spring", stiffness: 140, damping: 16, delay: 0.5 }}
-              >
-                <motion.div style={reduce ? undefined : { x: eyeX, y: eyeY, rotate: tilt }}>
-                  <Image src="/assets/avatar/boy.webp" alt="Illustrated portrait of Sandhosh" width={936} height={1024} priority className="h-auto w-full" />
-                </motion.div>
+          {/* The boy peeks over the ledge. One drawing (head and hands), positioned so its
+              drawn ledge line (85% down the image) sits on the wall's bottom edge. */}
+          <div className="pointer-events-none absolute bottom-0 left-1/2 w-[clamp(250px,32vw,400px)] -translate-x-1/2 translate-y-[15.3%]">
+            <motion.div
+              ref={faceRef}
+              initial={{ y: 40, opacity: 0, scale: 0.92 }}
+              animate={ready ? { y: 0, opacity: 1, scale: 1 } : undefined}
+              transition={{ type: "spring", stiffness: 160, damping: 15, delay: 0.5 }}
+              style={{ transformOrigin: "50% 85%" }}
+            >
+              <motion.div style={reduce ? undefined : { x: eyeX, rotate: tilt }}>
+                <Image src="/assets/peek/peek.webp" alt="Illustrated Sandhosh peeking over the wall" width={912} height={464} priority className="h-auto w-full" />
               </motion.div>
-            </div>
-            {/* hands grip the ledge: half above, half below the edge */}
-            {(["left", "right"] as const).map((side, i) => (
-              <motion.div
-                key={side}
-                aria-hidden
-                className="absolute bottom-0 w-[26%]"
-                style={side === "left" ? { left: "8%" } : { right: "8%" }}
-                initial={{ y: "-60%", opacity: 0 }}
-                animate={ready ? { y: "42%", opacity: 1 } : undefined}
-                transition={{ ...springPop, delay: 0.95 + i * 0.08 }}
-              >
-                <Image src="/assets/avatar/hand-sm.webp" alt="" width={400} height={177} className={`h-auto w-full ${side === "left" ? "" : "-scale-x-100"}`} />
-              </motion.div>
-            ))}
+            </motion.div>
           </div>
         </div>
 

@@ -5,7 +5,6 @@ import { useState, type FormEvent } from "react";
 import { profile } from "@/content/profile";
 import { stickerBurst } from "@/lib/confetti";
 import { ease } from "@/lib/motion";
-import { SelectionFrame } from "@/components/ui/SelectionFrame";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -44,35 +43,64 @@ export function Contact() {
     <section id="contact" className="pb-16 pt-20 md:pt-[120px]">
       <div className="container-page">
         <div className="relative flex flex-col items-center text-center">
-          <motion.div className="relative" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.8 }}>
-            <SelectionFrame onView fill="var(--color-ink)">
-              <h2 className="px-[0.14em] py-[0.06em] font-display text-[clamp(48px,9vw,112px)] font-extrabold leading-[0.95] tracking-[-0.035em] text-paper">LET&apos;S BUILD</h2>
-            </SelectionFrame>
-            <motion.span
-              className="absolute -bottom-[0.95em] right-0 -rotate-6 font-sign text-[clamp(34px,5vw,64px)] leading-none text-accent"
-              variants={{ hidden: { clipPath: "inset(-20% 100% -20% 0%)" }, show: { clipPath: "inset(-20% 0% -20% 0%)", transition: { duration: 0.8, ease: "easeInOut", delay: 0.9 } } }}
-            >
-              together!!
-            </motion.span>
-            {/* waving avatar (fallback: bust + sparkle) */}
+          {/* Banner composition, drawn to the "Let's build" mockup */}
+          <motion.div className="relative mt-24 w-[min(760px,100%)] md:mt-32" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }}>
+            <h2 className="sr-only">Let&apos;s build together</h2>
+            {/* the boy leans over the banner, hands on its top edge */}
             <motion.div
-              className="absolute -left-20 -top-16 w-24 md:-left-32 md:w-32 max-sm:hidden"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0, rotate: [0, -6, 5, -4, 0] }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease, delay: 0.4 }}
+              aria-hidden
+              className="absolute bottom-[78%] left-1/2 w-[46%] -translate-x-[58%]"
+              variants={{ hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 150, damping: 15, delay: 0.35 } } }}
             >
-              <Image src="/assets/avatar/boy-sm.webp" alt="" width={366} height={400} className="h-auto w-full" />
-              <Image src="/assets/doodles/sparkle-sm.webp" alt="" width={80} height={74} className="absolute -right-3 top-0 w-8" />
+              <Image src="/assets/contact/boy-point.webp" alt="" width={540} height={440} className="h-auto w-full" />
+            </motion.div>
+            <motion.div
+              aria-hidden
+              className="relative"
+              variants={{ hidden: { opacity: 0, scale: 1.25, rotate: -6 }, show: { opacity: 1, scale: 1, rotate: -2, transition: { type: "spring", stiffness: 220, damping: 16 } } }}
+            >
+              <Image src="/assets/contact/lets-build.webp" alt="" width={1024} height={378} className="h-auto w-full" />
+            </motion.div>
+            <motion.div
+              aria-hidden
+              className="absolute -bottom-[18%] -right-[4%] w-[38%]"
+              variants={{ hidden: { clipPath: "inset(-10% 100% -10% 0%)" }, show: { clipPath: "inset(-10% 0% -10% 0%)", transition: { duration: 0.7, ease: "easeInOut", delay: 0.8 } } }}
+            >
+              <Image src="/assets/contact/together.webp" alt="" width={585} height={297} className="h-auto w-full" />
+            </motion.div>
+            <motion.div
+              aria-hidden
+              className="absolute -top-[4%] right-[12%] w-[7%]"
+              variants={{ hidden: { scale: 0 }, show: { scale: 1, rotate: 15, transition: { type: "spring", stiffness: 260, damping: 12, delay: 1 } } }}
+            >
+              <Image src="/assets/contact/sparkle.webp" alt="" width={123} height={129} className="h-auto w-full" />
             </motion.div>
           </motion.div>
 
-          <p className="mt-16 max-w-[34ch] text-[19px] text-ink-2">Got a hard backend problem, or a game idea? I&apos;d love to hear it.</p>
+          <p className="mt-20 max-w-[34ch] text-[19px] text-ink-2 md:mt-24">Got a hard backend problem, or a game idea? I&apos;d love to hear it.</p>
 
           <div className="relative mt-8">
-            <button type="button" onClick={copy} className="btn btn-ink min-h-14 px-7 font-mono text-[15px] md:text-[17px]">
-              {profile.email}
-              <span aria-hidden className="rounded-md bg-white/15 px-2 py-0.5 text-[12px]">
+            {/* handwritten pointer, desktop only */}
+            <p aria-hidden className="absolute right-full top-1/2 mr-6 hidden w-36 -translate-y-1/2 -rotate-6 text-left font-hand text-[19px] leading-tight text-ink lg:block">
+              Email is the fastest way to reach me.
+              <svg viewBox="0 0 70 30" className="absolute -right-14 top-1 h-7 w-16">
+                <path d="M2 20 C 20 2, 45 2, 64 14" fill="none" stroke="#141210" strokeWidth="2" strokeLinecap="round" />
+                <path d="M56 8 L65 14 L56 20" fill="none" stroke="#141210" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </p>
+            <button
+              type="button"
+              onClick={copy}
+              className="flex min-h-14 items-center gap-3 rounded-[14px] border-2 border-ink bg-[#1a1d24] py-2 pl-2 pr-2 font-mono text-[14px] text-white shadow-[4px_5px_0_var(--color-accent)] transition-transform hover:-translate-y-0.5 active:translate-y-0.5 md:text-[17px]"
+            >
+              <span aria-hidden className="grid h-10 w-10 place-items-center rounded-[10px] bg-white/10">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="M3 7l9 6 9-6" />
+                </svg>
+              </span>
+              <span className="px-1">{profile.email}</span>
+              <span aria-hidden className="rounded-[8px] bg-white/10 px-3 py-2 text-[13px]">
                 copy
               </span>
             </button>
@@ -84,13 +112,17 @@ export function Contact() {
               )}
             </AnimatePresence>
           </div>
-          <p className="mt-3 font-hand text-[19px] text-ink-2">Email is the fastest way to reach me.</p>
+          <p className="mt-3 font-hand text-[19px] text-ink-2 lg:hidden">Email is the fastest way to reach me.</p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Social href={profile.links.linkedin} src="/assets/icons/linkedin.webp" label="LinkedIn" />
             <Social href={profile.links.github} src="/assets/icons/github.webp" label="GitHub" />
-            <a href={profile.links.resume} download className="btn btn-ghost min-h-12">
-              Resume <span aria-hidden>↓</span>
+            <a href={profile.links.resume} download className="btn btn-ghost min-h-14 rounded-[12px] pl-3 font-mono">
+              <svg aria-hidden viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 2h9l5 5v15H6z" />
+                <path d="M14 2v6h6M9 13h7M9 17h7" />
+              </svg>
+              Resume <span aria-hidden>↗</span>
             </a>
           </div>
         </div>
@@ -165,7 +197,7 @@ function Field({ name, label, type = "text", autoComplete }: { name: string; lab
 
 function Social({ href, src, label }: { href: string; src: string; label: string }) {
   return (
-    <motion.a href={href} target="_blank" rel="noreferrer" className="btn btn-ghost min-h-12 pl-2" whileHover={{ rotate: [0, -3, 3, 0] }}>
+    <motion.a href={href} target="_blank" rel="noreferrer" className="btn btn-ghost min-h-14 rounded-[12px] pl-2.5 font-mono" whileHover={{ rotate: [0, -3, 3, 0] }}>
       <Image src={src.replace(".webp", "-sm.webp")} alt="" width={64} height={64} className="h-8 w-8" />
       {label}
     </motion.a>

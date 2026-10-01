@@ -23,6 +23,7 @@
   --font-display: var(--font-bricolage), system-ui, sans-serif;
   --font-sans: var(--font-instrument), system-ui, sans-serif;
   --font-hand: var(--font-caveat), cursive;
+  --font-print: var(--font-patrick), cursive;
   --font-sign: var(--font-dafoe), cursive;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
   --font-pixel: var(--font-pixel), monospace;
@@ -141,6 +142,13 @@ html {
     border-radius: var(--radius-wobble);
     box-shadow: var(--shadow-ink);
   }
+  /* ERP card, drawn to the mockups: navy ink outline and a heavy offset shadow. */
+  .erp-card {
+    background: #fbf6ea url(/assets/paper/texture-sm.webp) center / 420px auto;
+    border: 2.5px solid #1d2433;
+    border-radius: 18px;
+    box-shadow: 9px 10px 0 #1d2433;
+  }
   .sketch-pill {
     border: 2px solid var(--color-ink);
     border-radius: var(--radius-wobble-pill);
@@ -233,6 +241,12 @@ html {
     color: var(--color-ink-2);
     white-space: nowrap;
   }
+}
+
+/* Patrick Hand ships no fi/fl ligature glyphs; without this "fill" renders a box. */
+.font-print {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
 }
 
 /* CRT scanlines for Player 2. */

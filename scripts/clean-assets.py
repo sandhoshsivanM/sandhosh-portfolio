@@ -73,8 +73,17 @@ ASSETS = {
 }
 
 # Sheets split into pieces, left to right / top to bottom.
-# Sheets split into pieces in reading order: (group, names or None, gap px).
+# Sheets split into pieces in reading order: (group, names, gap px[, keep]).
+# `keep` drops pieces smaller than that fraction of the largest one.
 SHEETS = {
+    "D6E96AF1": ("peek", [
+        "peek", "peek-tilt", "peek-smile", "peek-pair", "peek-side", "hand-grip-l", "hand-grip-r",
+        "head", "eye-1", "eye-2", "eye-3", "hand-point-side", "hand-point", "hand-grip-r2", "hair-1", "hair-2",
+    ], 4, 0.01),
+    "2A780284": ("contact", [
+        "boy-point", "lets-build", "together", "email-bar", "reach-me", "btn-linkedin", "btn-github",
+        "btn-resume", "dash-1", "dash-2", "sparkle", "scribble", "tape-yellow", "tape-red", "cursor",
+    ], 4, 0.01),
     "D375D076": ("icons", ["ai-claude", "ai-cursor", "ai-copilot"], 6),
     "68AFD842": ("icons", ["ai-claude-alt", "ai-cursor-alt", "ai-copilot-alt"], 6),
     "ACEC054B": ("tape", [f"tape-{i:02d}" for i in range(1, 14)], 3),
@@ -85,7 +94,9 @@ SHEETS = {
     ], 2),
 }
 
-# Not exported: 7719CB61 (10-logo reference sheet), "F0500E0D... 2" (duplicate).
+# Not exported (design references only): the five ERP card mockups CFF3AC21,
+# B8F82D33, 6227C759, 3C99A741, 6D8FE468 and the contact layout E5514FCD.
+# Also not exported: 7719CB61 (10-logo reference sheet), "F0500E0D... 2" (duplicate).
 
 
 def background_mask(rgb: np.ndarray, key: str) -> np.ndarray:
@@ -178,8 +189,8 @@ def main() -> None:
         im = key_out(Image.open(raw(prefix)), key)
         export(im if key == NONE else trim(im), group, name)
         print(f"{group}/{name}")
-    for prefix, (group, names, gap) in SHEETS.items():
-        pieces = split(Image.open(raw(prefix)).convert("RGBA"), gap)
+    for prefix, (group, names, gap, *keep) in SHEETS.items():
+        pieces = split(Image.open(raw(prefix)).convert("RGBA"), gap, *keep)
         assert len(pieces) == len(names), f"{prefix}: {len(pieces)} pieces, {len(names)} names"
         for name, piece in zip(names, pieces):
             export(trim(piece), group, name)

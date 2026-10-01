@@ -61,11 +61,20 @@ export function Toolbox() {
               <p className="text-[15px] text-ink-2">Claude, Cursor and Copilot. I review every line they write.</p>
             </div>
           </div>
-          <div className="card flex flex-col justify-center p-6">
+          <div className="card flex flex-col gap-4 p-6 sm:flex-row sm:items-center">
+            <div className="flex shrink-0">
+              {integration.stickers.map((s, i) => (
+                <motion.div key={s} className="-ml-1.5 w-12 first:ml-0" whileHover={{ y: -4, rotate: i % 2 ? 6 : -6 }}>
+                  <Image src={`/assets/stickers/${s}-sm.webp`} alt={s === "react" ? "React" : "TypeScript"} width={120} height={120} className="h-auto w-full drop-shadow" />
+                </motion.div>
+              ))}
+            </div>
+            <div>
             <h3 className="font-display text-[18px] font-bold">{integration.title}</h3>
             <p className="text-[15px] text-ink-2">
               Enough to wire my APIs into the screens others build: <span className="font-mono text-[13px]">{integration.tools.join(" · ")}</span>
             </p>
+            </div>
           </div>
         </div>
 

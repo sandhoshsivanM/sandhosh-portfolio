@@ -12,7 +12,7 @@ export const stats = [
 ];
 
 export const heart = [
-  "I grew up on Assassin's Creed, Red Dead Redemption, GTA and both Ori games, and somewhere along the way I wanted to make them, not just play them. I've shipped one small game so far, built from scratch in C#. I'm a rookie, and I'm learning fast.",
+  "I grew up on Assassin's Creed, Red Dead Redemption and Ori and the Will of the Wisps, and somewhere along the way I wanted to make them, not just play them. I've shipped one small game so far, built from scratch in C#. I'm a rookie, and I'm learning fast.",
   "The rest of my free time goes to money: how it grows, how to invest it, how to keep it. I study personal finance and investing for myself, and that curiosity is exactly why I built Khazana.",
 ];
 

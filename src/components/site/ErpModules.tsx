@@ -6,7 +6,8 @@ import { ease, springPop } from "@/lib/motion";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { UnderTheHood } from "@/components/ui/UnderTheHood";
 
-const TILT = [-1, 0.8, -0.6, 1, -0.8, 0.6];
+const TILT = [-1.6, 1.2, -0.8, 1.4, -1.2, 0.9];
+const show = { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.5 } } as const;
 
 export function ErpModules() {
   return (
@@ -18,42 +19,48 @@ export function ErpModules() {
           lead="HR, buying, money, buildings, safety and paperwork for a 2,000-person company. I built the backend for all of it."
           paper="/assets/paper/torn-blue-grid-sm.webp"
         />
-        <ul className="grid auto-rows-fr gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
           {erpModules.map((m, i) => (
             <motion.li
               key={m.title}
-              className="relative"
-              initial={{ opacity: 0, y: -30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="relative flex"
+              initial={{ opacity: 0, y: -30, rotate: 0 }}
+              whileInView={{ opacity: 1, y: 0, rotate: TILT[i] }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ ...springPop, stiffness: 180, delay: (i % 3) * 0.08 }}
-              whileHover={{ y: -4 }}
+              transition={{ ...springPop, stiffness: 170, delay: (i % 3) * 0.08 }}
             >
-              {/* grid cell stays straight; only the paper layer tilts */}
-              <div aria-hidden className="sketch absolute inset-0" style={{ rotate: `${TILT[i]}deg` }} />
-              <motion.span
-                aria-hidden
-                className={`tape tape-${(i % 4) + 1} -top-3 left-1/2 z-10 -ml-[60px]`}
-                style={{ rotate: `${-TILT[i] * 3}deg` }}
-                initial={{ opacity: 0, scale: 0.6 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ ...springPop, delay: 0.35 + (i % 3) * 0.08 }}
-              />
-              <article className="relative flex h-full flex-col p-3 pb-5">
-                <div className="aspect-[16/10] overflow-hidden rounded-[6px] border-[1.5px] border-ink bg-paper">
+              <article className="erp-card relative flex w-full flex-col px-6 pb-5 pt-7">
+                <motion.span
+                  aria-hidden
+                  className={`tape tape-${(i % 4) + 1} -top-5 left-1/2 z-10 -ml-[70px] !h-[40px] !w-[140px]`}
+                  style={{ rotate: `${-TILT[i] * 1.5}deg` }}
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ ...springPop, delay: 0.35 + (i % 3) * 0.08 }}
+                />
+                <span aria-hidden className="absolute right-5 top-4 flex gap-1.5">
+                  <i className="h-3 w-3 rounded-full bg-[#a3a7ae]" />
+                  <i className="h-3 w-3 rounded-full bg-[#4b5160]" />
+                  <i className="h-3 w-3 rounded-full bg-[#1d2433]" />
+                </span>
+
+                <div className="min-h-[178px]">
                   <Screen kind={m.screen} />
                 </div>
-                <div className="flex flex-1 flex-col px-2 pt-4">
-                  <h3 className="h3">{m.title}</h3>
-                  <p className="mt-1.5 text-[15px] text-ink-2">{m.line}</p>
-                  {m.note && (
-                    <a href="#about" className="mt-2 w-fit font-hand text-[19px] text-accent link-draw">
-                      ↖ {m.note}
-                    </a>
-                  )}
-                  <UnderTheHood items={[m.hood]} />
-                </div>
+
+                <hr className="my-4 border-t-[1.5px] border-[#1d2433]/30" />
+
+                <h3 className="font-display text-[23px] font-extrabold leading-tight tracking-tight">
+                  <Highlight>{m.title}</Highlight>
+                </h3>
+                <p className="mt-2 font-print text-[19px] leading-snug text-ink">{m.line}</p>
+                {m.note && (
+                  <a href="#about" className="mt-1 w-fit font-hand text-[20px] text-accent link-draw">
+                    ↖ {m.note}
+                  </a>
+                )}
+                <UnderTheHood items={[m.hood]} />
               </article>
             </motion.li>
           ))}
@@ -63,79 +70,114 @@ export function ErpModules() {
   );
 }
 
-function Frame({ title, children }: { title: string; children: ReactNode }) {
+/** Yellow highlighter stroke under a heading. */
+function Highlight({ children }: { children: ReactNode }) {
   return (
-    <div className="flex h-full flex-col p-3 font-mono text-[10px] text-ink-2">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="font-semibold uppercase tracking-[0.12em] text-ink">{title}</span>
-        <span className="flex gap-1">
-          <i className="h-1.5 w-1.5 rounded-full bg-ink/20" />
-          <i className="h-1.5 w-1.5 rounded-full bg-ink/20" />
-        </span>
-      </div>
-      <div className="relative flex-1">{children}</div>
-    </div>
+    <span className="relative inline">
+      <motion.span
+        aria-hidden
+        className="absolute -inset-x-1 bottom-[-0.08em] h-[0.3em] rounded-full bg-sun/90"
+        style={{ transformOrigin: "left" }}
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, amount: 1 }}
+        transition={{ duration: 0.5, ease, delay: 0.5 }}
+      />
+      <span className="relative">{children}</span>
+    </span>
   );
 }
 
-const show = { initial: "hidden", whileInView: "show", viewport: { once: true, amount: 0.6 } } as const;
+/** Hand-drawn emphasis ticks, like the ones around the mockups. */
+function Ticks({ className = "", color = "#ffc53d", flip }: { className?: string; color?: string; flip?: boolean }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 30" className={`absolute h-8 w-6 ${flip ? "-scale-x-100" : ""} ${className}`}>
+      <g stroke={color} strokeWidth="3.2" strokeLinecap="round">
+        <path d="M20 4 L12 11" />
+        <path d="M22 15 L11 15" />
+        <path d="M20 26 L12 19" />
+      </g>
+    </svg>
+  );
+}
+
+function Label({ children }: { children: ReactNode }) {
+  return <p className="pr-16 font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-[#1d2433]">{children}</p>;
+}
+
+const box = "border-[1.5px] border-[#1d2433]";
 
 function Screen({ kind }: { kind: ErpScreen }) {
   switch (kind) {
     case "calendar":
       return (
-        <Frame title="Attendance · Oct">
-          <div className="flex h-full gap-3">
-            <motion.div className="grid flex-1 grid-cols-7 gap-1" {...show} variants={{ show: { transition: { staggerChildren: 0.025 } } }}>
+        <>
+          <Label>Attendance · Oct</Label>
+          <div className="relative mt-3 flex items-center gap-4">
+            <Ticks className="-left-6 top-6" color="#1e9e6a" />
+            <motion.div className="grid flex-1 grid-cols-7 gap-1.5" {...show} variants={{ show: { transition: { staggerChildren: 0.02 } } }}>
               {Array.from({ length: 28 }, (_, i) => (
                 <motion.i
                   key={i}
-                  className={`rounded-[3px] ${i % 7 > 4 ? "bg-ink/10" : i === 17 ? "bg-accent/80" : "bg-success/80"}`}
+                  className={`aspect-square rounded-[5px] ${box} ${i % 7 > 4 ? "bg-[#dcd8cf]" : i === 17 ? "bg-accent" : i % 3 ? "bg-[#2fae6e]" : "bg-[#5cc184]"}`}
                   variants={{ hidden: { opacity: 0, scale: 0.4 }, show: { opacity: 1, scale: 1 } }}
                 />
               ))}
             </motion.div>
-            <div className="flex w-14 flex-col justify-center text-center">
-              <span className="font-display text-[22px] font-extrabold text-ink">96%</span>
-              <span>present</span>
+            <div className="relative w-[72px] text-center">
+              <Ticks className="-right-4 -top-5" />
+              <span className="block font-display text-[30px] font-extrabold leading-none">
+                <Highlight>96%</Highlight>
+              </span>
+              <span className="mt-1 block font-print text-[18px]">present</span>
             </div>
           </div>
-        </Frame>
+        </>
       );
     case "flow":
       return (
-        <Frame title="Purchase flow">
-          <div className="flex h-full items-center justify-between gap-1">
-            {["RFQ", "PO", "GRN", "INV"].map((s, i) => (
+        <>
+          <Label>Purchase flow</Label>
+          <div className="relative mt-9 flex items-center justify-between gap-1">
+            <Ticks className="-left-6 -top-3" flip />
+            <Ticks className="-right-6 -top-3" />
+            {[
+              ["RFQ", "#8fc3f5"],
+              ["PO", "#ffd75e"],
+              ["GRN", "#93d6a9"],
+              ["INV", "#f7a594"],
+            ].map(([s, c], i) => (
               <div key={s} className="flex items-center gap-1">
                 <motion.span
-                  className="grid h-10 w-10 place-items-center rounded-lg border-[1.5px] border-ink bg-white font-bold text-ink md:h-11 md:w-11"
+                  className={`grid h-12 w-12 place-items-center rounded-[10px] font-mono text-[13px] font-bold text-[#1d2433] ${box}`}
+                  style={{ background: c }}
                   {...show}
-                  variants={{ hidden: { backgroundColor: "#ffffff" }, show: { backgroundColor: ["#ffffff", "#ffc53d", "#ffffff"], transition: { delay: 0.3 + i * 0.35, duration: 0.6 } } }}
+                  variants={{ hidden: { y: 0 }, show: { y: [0, -8, 0], transition: { delay: 0.3 + i * 0.3, duration: 0.45 } } }}
                 >
                   {s}
                 </motion.span>
-                {i < 3 && <span className="text-ink">→</span>}
+                {i < 3 && <span className="text-[18px] font-bold text-[#1d2433]">→</span>}
               </div>
             ))}
           </div>
-        </Frame>
+        </>
       );
     case "ledger":
       return (
-        <Frame title="Journal #4821">
-          <table className="w-full text-left">
+        <>
+          <Label>Journal #4821</Label>
+          <table className="mt-3 w-full text-left font-mono text-[12px] text-[#1d2433]">
             <thead>
               <tr className="text-ink-3">
-                <th className="font-normal">Account</th>
-                <th className="text-right font-normal">Dr</th>
-                <th className="text-right font-normal">Cr</th>
+                <th className="pb-1 font-normal">Account</th>
+                <th className="pb-1 text-right font-normal">Dr</th>
+                <th className="pb-1 text-right font-normal">Cr</th>
               </tr>
             </thead>
-            <tbody className="text-ink">
-              {[["Inventory", "4,200.00", ""], ["VAT input", "210.00", ""], ["Accounts payable", "", "4,410.00"]].map((r) => (
-                <tr key={r[0]} className="border-t border-line">
-                  <td className="py-1">{r[0]}</td>
+            <tbody>
+              {[["Inventory", "4,200.00", ""], ["VAT input", "210.00", ""], ["Payables", "", "4,410.00"]].map((r) => (
+                <tr key={r[0]} className="border-t border-dashed border-[#1d2433]/30">
+                  <td className="py-1.5">{r[0]}</td>
                   <td className="text-right">{r[1]}</td>
                   <td className="text-right">{r[2]}</td>
                 </tr>
@@ -143,69 +185,73 @@ function Screen({ kind }: { kind: ErpScreen }) {
             </tbody>
           </table>
           <motion.span
-            className="absolute bottom-0 right-0 rounded-full bg-success px-2 py-0.5 font-semibold text-white"
+            className={`mt-3 ml-auto block w-fit rounded-full bg-[#2fae6e] px-3 py-1 font-mono text-[12px] font-bold text-white ${box}`}
             {...show}
-            variants={{ hidden: { scale: 0, rotate: -20 }, show: { scale: 1, rotate: -4, transition: { ...springPop, delay: 0.6 } } }}
+            variants={{ hidden: { scale: 0, rotate: -20 }, show: { scale: 1, rotate: -5, transition: { ...springPop, delay: 0.6 } } }}
           >
             Balanced ✓
           </motion.span>
-        </Frame>
+        </>
       );
     case "workorder":
       return (
-        <Frame title="WO-1187 · Chiller 2">
-          <p className="text-ink">Planned maintenance</p>
-          <p>Assigned · HVAC team · Due Fri</p>
-          <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-ink/10">
-            <motion.div className="h-full rounded-full bg-frame" {...show} variants={{ hidden: { width: "0%" }, show: { width: "72%", transition: { duration: 1.2, ease, delay: 0.3 } } }} />
+        <>
+          <Label>WO-1187 · Chiller 2</Label>
+          <p className="mt-3 font-mono text-[13px] text-[#1d2433]">Planned maintenance</p>
+          <p className="font-mono text-[12px] text-[#5a6377]">Assigned · HVAC team · Due Fri</p>
+          <div className="relative mt-5">
+            <Ticks className="-left-6 -top-2" flip />
+            <Ticks className="-right-6 -top-2" />
+            <div className={`h-5 overflow-hidden rounded-full bg-[#dcd8cf] ${box}`}>
+              <motion.div className="h-full rounded-full bg-frame" {...show} variants={{ hidden: { width: "0%" }, show: { width: "72%", transition: { duration: 1.2, ease, delay: 0.3 } } }} />
+            </div>
+            <p className="mt-1.5 text-right font-mono text-[14px] font-bold text-[#1d2433]">72%</p>
           </div>
-          <p className="mt-1.5 text-right">72%</p>
-        </Frame>
+        </>
       );
     case "checklist":
       return (
-        <Frame title="Hot-work permit">
-          <motion.ul className="space-y-1.5 text-ink" {...show} variants={{ show: { transition: { staggerChildren: 0.3, delayChildren: 0.3 } } }}>
+        <>
+          <Label>Hot-work permit</Label>
+          <motion.ul className="relative mt-3 space-y-2 font-mono text-[13px] text-[#1d2433]" {...show} variants={{ show: { transition: { staggerChildren: 0.25, delayChildren: 0.3 } } }}>
+            <Ticks className="-right-1 -top-1" color="#1e9e6a" />
             {["Area cleared", "Fire watch assigned", "Gas test passed", "Supervisor sign-off"].map((c) => (
-              <motion.li key={c} className="flex items-center gap-2" variants={{ hidden: { opacity: 0.35 }, show: { opacity: 1 } }}>
-                <motion.span className="grid h-3.5 w-3.5 place-items-center rounded-[3px] border border-ink text-[9px]" variants={{ hidden: { backgroundColor: "#fff", color: "#fff" }, show: { backgroundColor: "#1e9e6a", color: "#fff" } }}>
+              <motion.li key={c} className="flex items-center gap-3" variants={{ hidden: { opacity: 0.35 }, show: { opacity: 1 } }}>
+                <motion.span
+                  className={`grid h-6 w-6 shrink-0 place-items-center rounded-[6px] text-[13px] font-bold ${box}`}
+                  variants={{ hidden: { backgroundColor: "#fbf6ea", color: "#fbf6ea" }, show: { backgroundColor: "#1e9e6a", color: "#ffffff" } }}
+                >
                   ✓
                 </motion.span>
                 {c}
               </motion.li>
             ))}
           </motion.ul>
-        </Frame>
+        </>
       );
     case "ocr":
       return (
-        <Frame title="Invoice.pdf → fields">
-          <div className="flex h-full gap-3">
-            <div className="relative w-[42%] overflow-hidden rounded-[3px] border border-line bg-white p-2">
-              {[80, 60, 90, 50, 70, 40].map((w, i) => (
-                <i key={i} className="mb-1.5 block h-1 rounded bg-ink/20" style={{ width: `${w}%` }} />
+        <>
+          <Label>Invoice.pdf → fields</Label>
+          <div className="relative mt-3 flex gap-4 rounded-[10px] border-[1.5px] border-[#1d2433]/25 bg-[#ecebe6] p-3">
+            <Ticks className="-left-6 top-6" flip />
+            <Ticks className="-right-6 top-6" />
+            <div className="relative w-[44%] overflow-hidden rounded-[6px] border border-[#1d2433]/20 bg-white p-2.5 shadow-[2px_2px_0_rgba(29,36,51,.12)] [clip-path:polygon(0_0,100%_0,100%_86%,86%_100%,0_100%)]">
+              {[70, 90, 60, 80, 50, 65, 45].map((w, i) => (
+                <i key={i} className={`mb-1.5 block h-1.5 rounded ${i === 1 ? "bg-accent" : "bg-[#c4c6cc]"}`} style={{ width: `${w}%` }} />
               ))}
-              <motion.i
-                className="absolute inset-x-0 h-0.5 bg-accent shadow-[0_0_8px_#ff5b1f]"
-                initial={{ top: "0%" }}
-                whileInView={{ top: ["0%", "100%", "0%"] }}
-                viewport={{ once: false }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-              />
+              <i className="scan absolute inset-x-0 top-0 h-0.5 bg-accent shadow-[0_0_8px_#ff5b1f] [--scan-h:96px]" />
             </div>
-            <ul className="flex-1 space-y-1 text-ink">
-              <li>
-                <span className="text-ink-3">Vendor</span> Al Noor LLC
-              </li>
-              <li>
-                <span className="text-ink-3">Total</span> AED 4,410
-              </li>
-              <li>
-                <span className="text-ink-3">Date</span> 14 Oct
-              </li>
-            </ul>
+            <dl className="flex-1 space-y-2 self-center font-mono text-[12px] text-[#1d2433]">
+              {[["Vendor", "Al Noor LLC"], ["Total", "AED 4,410"], ["Date", "14 Oct"]].map(([k, v]) => (
+                <div key={k} className="flex gap-2">
+                  <dt className="w-12 shrink-0 text-[#6b7280]">{k}</dt>
+                  <dd className="font-semibold">{v}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-        </Frame>
+        </>
       );
   }
 }

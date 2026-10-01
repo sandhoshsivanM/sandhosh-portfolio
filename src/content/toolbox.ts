@@ -6,7 +6,7 @@ export const toolbox = [
 ];
 
 // Client-side work is integration only, so it sits last and small.
-export const integration = { title: "Working with front ends", tools: ["TypeScript", "React", "Angular"] };
+export const integration = { title: "Working with front ends", tools: ["TypeScript", "React", "Angular"], stickers: ["typescript", "react"] };
 
 export const aiTools = [
   { name: "Claude", src: "/assets/icons/ai-claude.webp" },
