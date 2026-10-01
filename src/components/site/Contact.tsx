@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { profile } from "@/content/profile";
 import { stickerBurst } from "@/lib/confetti";
 import { ease } from "@/lib/motion";
@@ -37,6 +37,17 @@ async function copyText(text: string) {
 export function Contact() {
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
+  const notes = useRef<HTMLDivElement>(null);
+  const [alive, setAlive] = useState(false);
+
+  // The idle loops below run only while the note cards are on screen.
+  useEffect(() => {
+    const el = notes.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setAlive(e.isIntersecting), { threshold: 0.05 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const copy = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -72,11 +83,11 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="pb-16 pt-20 md:pt-[120px]">
+    <section id="contact" className="scroll-mt-16 pb-12 pt-12 sm:pt-16 md:pt-24 lg:pt-[120px]">
       <div className="container-page">
         <div className="relative flex flex-col items-center text-center">
           {/* Banner composition, drawn to the "Let's build" mockup */}
-          <motion.div className="relative mt-16 w-[min(760px,100%)] sm:mt-24 md:mt-32" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }}>
+          <motion.div className="relative mt-16 w-[min(760px,100%)] sm:mt-24 md:mt-32" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}>
             <h2 className="sr-only">Let&apos;s build together</h2>
             <div aria-hidden className="absolute inset-x-[8%] -bottom-[10%] h-[22%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(60,30,10,0.22),transparent)]" />
             <motion.div
@@ -149,7 +160,7 @@ export function Contact() {
           </div>
           <p className="mt-3 font-hand text-[19px] text-ink-2 lg:hidden">Email is the fastest way to reach me.</p>
 
-          <motion.div className="mt-8 flex flex-wrap justify-center gap-4" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.6 }} variants={{ show: { transition: { staggerChildren: 0.1 } } }}>
+          <motion.div className="mt-8 flex flex-wrap justify-center gap-4" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={{ show: { transition: { staggerChildren: 0.1 } } }}>
             <Social href={profile.links.linkedin} src="/assets/icons/linkedin.webp" label="LinkedIn" />
             <Social href={profile.links.github} src="/assets/icons/github.webp" label="GitHub" />
             <motion.a variants={pop} whileHover={{ rotate: [0, -3, 3, 0] }} href={profile.links.resume} download className="btn btn-ghost min-h-14 rounded-[12px] pl-3 font-mono">
@@ -162,28 +173,39 @@ export function Contact() {
           </motion.div>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-[1000px] gap-6 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        <div ref={notes} data-alive={alive} className="notes mx-auto mt-12 grid max-w-[1000px] gap-8 sm:mt-16 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-6">
           <motion.form
             onSubmit={submit}
             className="card relative flex flex-col gap-4 p-6 md:p-8"
             initial={{ opacity: 0, x: -40, rotate: -3 }}
             whileInView={{ opacity: 1, x: 0, rotate: -0.6 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ type: "spring", stiffness: 140, damping: 16 }}
           >
-            <motion.div
-              aria-hidden
-              className="absolute -right-4 -top-6 w-14 rotate-12"
-              initial={{ scale: 0, rotate: -40 }}
-              whileInView={{ scale: 1, rotate: 12 }}
-              viewport={{ once: true }}
-              transition={{ type: "spring", stiffness: 260, damping: 12, delay: 0.5 }}
-            >
-              <Image src="/assets/doodles/pencil-sm.webp" alt="" width={400} height={262} className="h-auto w-full drop-shadow-md" />
-            </motion.div>
-            <h3 className="h3">Or leave a note</h3>
+            {/* The pencil writes a squiggle under the heading, rests, and does it again. */}
+            <div className="relative w-fit pb-3">
+              <h3 className="h3">Or leave a note</h3>
+              <svg aria-hidden viewBox="0 0 240 14" preserveAspectRatio="none" className="absolute bottom-0 left-0 h-3.5 w-full overflow-visible text-accent">
+                <path className="loop scribble" d="M2 9 C 22 2, 38 13, 58 7 S 96 3, 118 8 S 160 13, 182 6 S 222 4, 238 8" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" pathLength={100} />
+              </svg>
+              <motion.div
+                aria-hidden
+                className="absolute bottom-[2px] left-0 w-full"
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 260, damping: 12, delay: 0.5 }}
+              >
+                {/* the image's tip is its bottom-left corner, so that corner rides the line */}
+                <div className="loop pencil-ride absolute inset-x-0 bottom-0">
+                  <div className="absolute bottom-0 left-0 w-24 sm:w-28">
+                    <Image src="/assets/doodles/pencil-sm.webp" alt="" width={400} height={262} className="h-auto w-full drop-shadow-md" />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field name="name" label="Your name" autoComplete="name" />
+              <Field name="name" label="Your name" autoComplete="name" typing={alive ? "Recruiter at Acme…" : undefined} />
               <Field name="email" label="Your email" type="email" autoComplete="email" />
             </div>
             <label className="flex flex-col gap-1.5 text-[14px] font-semibold">
@@ -192,7 +214,7 @@ export function Contact() {
             </label>
             <div className="flex flex-wrap items-center gap-4">
               <button type="submit" className="btn btn-ink relative overflow-visible">
-                Open in Gmail <span aria-hidden>↗</span>
+                Open in Gmail <span aria-hidden className="loop hop inline-block">✈︎</span>
                 <AnimatePresence>
                   {status === "sent" && (
                     <motion.span aria-hidden className="absolute right-0 top-0" initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }} animate={{ x: 260, y: -160, opacity: 0, rotate: 20 }} transition={{ duration: 1, ease }}>
@@ -207,28 +229,31 @@ export function Contact() {
             </div>
           </motion.form>
 
+          <div className="loop sway origin-top">
           <motion.aside
             className="relative border-2 border-ink bg-note-yellow p-6 shadow-[3px_4px_0_#141210] md:p-7 rounded-[14px_22px_16px_24px/22px_14px_24px_16px]"
             initial={{ opacity: 0, x: 40, y: -20, rotate: 6 }}
             whileInView={{ opacity: 1, x: 0, y: 0, rotate: 1.2 }}
             whileHover={{ rotate: 0, y: -3 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ type: "spring", stiffness: 140, damping: 14, delay: 0.1 }}
           >
+            <span aria-hidden className="loop tape-lift absolute -top-4 left-1/2 -ml-[60px] block h-[34px] w-[120px] origin-left">
             <motion.span
               aria-hidden
-              className="tape tape-2 -top-4 left-1/2 -ml-[60px]"
+              className="tape tape-2 left-0 top-0"
               initial={{ scale: 1.5, opacity: 0, rotate: -12 }}
               whileInView={{ scale: 1, opacity: 1, rotate: 3 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 300, damping: 14, delay: 0.55 }}
             />
+            </span>
             <h3 className="font-display text-[20px] font-extrabold">In a hurry?</h3>
             <motion.dl
               className="mt-4 space-y-3 text-[15px]"
               initial="hidden"
               whileInView="show"
-              viewport={{ once: true, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.1 }}
               variants={{ show: { transition: { staggerChildren: 0.12, delayChildren: 0.5 } } }}
             >
               {profile.hurry.map(([k, v]) => (
@@ -239,22 +264,62 @@ export function Contact() {
               ))}
             </motion.dl>
             <a href={profile.links.resume} download className="btn btn-ink group mt-6 w-full">
-              Download resume <span aria-hidden className="inline-block transition-transform duration-300 group-hover:translate-y-0.5">↓</span>
+              Download resume <span aria-hidden className="loop bob inline-block">↓</span>
             </a>
           </motion.aside>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Field({ name, label, type = "text", autoComplete }: { name: string; label: string; type?: string; autoComplete?: string }) {
+function Field({ name, label, type = "text", autoComplete, typing }: { name: string; label: string; type?: string; autoComplete?: string; typing?: string }) {
+  const placeholder = useTypedPlaceholder(typing);
   return (
     <label className="flex flex-col gap-1.5 text-[14px] font-semibold">
       {label}
-      <input name={name} type={type} required autoComplete={autoComplete} maxLength={200} className="field min-h-12 rounded-xl border-[1.5px] border-ink bg-white px-4 text-[16px] font-normal outline-none" />
+      <input
+        name={name}
+        type={type}
+        required
+        autoComplete={autoComplete}
+        maxLength={200}
+        placeholder={placeholder}
+        className="field min-h-12 rounded-xl border-[1.5px] border-ink bg-white px-4 text-[16px] font-normal outline-none placeholder:text-ink-3 focus:placeholder:text-transparent"
+      />
     </label>
   );
+}
+
+/** Types `text` out as a placeholder with a blinking caret, pauses, erases, repeats. Off when `text` is undefined or motion is reduced. */
+function useTypedPlaceholder(text?: string) {
+  const [shown, setShown] = useState("");
+  useEffect(() => {
+    if (!text || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let i = 0;
+    let dir = 1;
+    let hold = 0;
+    let caret = true;
+    const t = window.setInterval(() => {
+      caret = !caret;
+      if (hold > 0) {
+        hold--;
+      } else {
+        i += dir;
+        if (i >= text.length) {
+          dir = -1;
+          hold = 14;
+        } else if (i <= 0) {
+          dir = 1;
+          hold = 6;
+        }
+      }
+      setShown(text.slice(0, i) + (caret || hold === 0 ? "|" : ""));
+    }, 110);
+    return () => window.clearInterval(t);
+  }, [text]);
+  return text ? shown : "";
 }
 
 function Social({ href, src, label }: { href: string; src: string; label: string }) {

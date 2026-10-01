@@ -43,7 +43,17 @@
 }
 
 :root {
+  /* hero wall + peek: taller wall and bigger head on phones */
+  --wall-h: clamp(300px, 86vw, 360px);
+  --peek-w: clamp(240px, 66vw, 300px);
   --wall: linear-gradient(120deg, #f48a5a 0%, #ef5a3c 28%, #df3f68 55%, #a83fa8 80%, #6e44d6 100%);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --wall-h: clamp(240px, 30vw, 360px);
+    --peek-w: clamp(260px, 36vw, 450px);
+  }
 }
 
 html {
@@ -257,6 +267,108 @@ html {
   background: #fffef8;
 }
 
+/* Contact notes: idle loops, paused while the cards are off screen. */
+.notes .loop {
+  animation-play-state: running;
+}
+.notes[data-alive="false"] .loop {
+  animation-play-state: paused;
+}
+.scribble {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: scribble 6s var(--ease-out) infinite;
+}
+@keyframes scribble {
+  0%,
+  6% {
+    stroke-dashoffset: 100;
+    opacity: 1;
+  }
+  46%,
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  96%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+/* the pencil tip follows the line: a full-width track slides by its own width */
+.pencil-ride {
+  animation: pencil-ride 6s var(--ease-out) infinite;
+}
+@keyframes pencil-ride {
+  0%,
+  6% {
+    transform: translate(0, 0);
+  }
+  26% {
+    transform: translate(45%, -3px);
+  }
+  46% {
+    transform: translate(100%, 1px);
+  }
+  60%,
+  86% {
+    transform: translate(100%, -16px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+.sway {
+  animation: sway 6.5s ease-in-out infinite;
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-1.4deg) translateY(-2px);
+  }
+}
+.tape-lift {
+  animation: tape-lift 6.5s ease-in-out infinite;
+}
+@keyframes tape-lift {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(-5deg) translateY(-3px);
+  }
+}
+.bob {
+  animation: bob 1.6s ease-in-out infinite;
+}
+@keyframes bob {
+  50% {
+    transform: translateY(3px);
+  }
+}
+.hop {
+  animation: hop 4s ease-in-out infinite;
+}
+@keyframes hop {
+  0%,
+  80%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  86% {
+    transform: translate(4px, -6px) rotate(-12deg);
+  }
+  92% {
+    transform: translate(1px, -2px) rotate(4deg);
+  }
+}
+
 /* Patrick Hand ships no fi/fl ligature glyphs; without this "fill" renders a box. */
 .font-print {
   font-variant-ligatures: none;
@@ -333,6 +445,7 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+  .notes .loop,
   .ticker-track,
   .float-y,
   .drift,

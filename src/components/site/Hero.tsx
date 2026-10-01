@@ -11,18 +11,19 @@ import { Sticker } from "@/components/ui/Sticker";
 
 const WELCOME = "WELCOME TO MY";
 
-// Stickers on the wall. `phone` ones stay on small screens, `tablet` from md.
+// Stickers on the wall. Phones get their own arrangement (max-md:*): four stickers in
+// the wall's corners and sides, clear of the head; tablets/desktop use the wide layout.
 const STICKERS = [
-  { src: "csharp", alt: "C#", cls: "left-[4%] top-[52%] max-md:left-[3%] max-md:top-[6%]", r: -10, d: 0.7, show: "all" },
-  { src: "dotnet", alt: ".NET", cls: "left-[30%] top-[6%]", r: 8, d: 0.79, show: "tablet" },
-  { src: "sql", alt: "SQL Server", cls: "right-[4%] top-[50%] max-md:right-[3%] max-md:top-[6%]", r: 9, d: 0.88, show: "all" },
-  { src: "redis", alt: "Redis", cls: "right-[30%] top-[5%]", r: -7, d: 0.97, show: "tablet" },
+  { src: "csharp", alt: "C#", cls: "left-[4%] top-[52%] max-md:left-[4%] max-md:top-[7%]", r: -10, d: 0.7, show: "all" },
+  { src: "dotnet", alt: ".NET", cls: "left-[30%] top-[6%] max-md:left-[6%] max-md:top-[44%]", r: 8, d: 0.79, show: "all" },
+  { src: "sql", alt: "SQL Server", cls: "right-[4%] top-[50%] max-md:right-[4%] max-md:top-[7%]", r: 9, d: 0.88, show: "all" },
+  { src: "redis", alt: "Redis", cls: "right-[30%] top-[5%] max-md:right-[6%] max-md:top-[42%]", r: -7, d: 0.97, show: "all" },
   { src: "docker", alt: "Docker", cls: "left-[15%] bottom-[8%]", r: 6, d: 1.06, show: "desktop" },
   { src: "azure", alt: "Azure", cls: "right-[15%] bottom-[10%]", r: -6, d: 1.15, show: "desktop" },
 ] as const;
 
-const WALL_H = "clamp(240px, 30vw, 360px)";
-const PEEK_W = "clamp(220px, 36vw, 450px)";
+const WALL_H = "var(--wall-h)";
+const PEEK_W = "var(--peek-w)";
 // How far the head sits below the wall edge: hides the mouth, shows the eyes.
 // The idle loop lifts it 12% now and then so the smile shows.
 const HEAD_PEEK = "27%";
@@ -37,7 +38,7 @@ export function Hero() {
   const state = ready ? "show" : "hidden";
 
   return (
-    <section id="top" className="relative pb-16 pt-10 md:pt-14">
+    <section id="top" className="relative pb-12 pt-6 sm:pb-16 sm:pt-10 md:pt-14">
       <div className="container-page">
         {/* WELCOME TO MY */}
         <motion.p
@@ -99,8 +100,8 @@ export function Hero() {
               ))}
             {ready && (
               <>
-                <NamedCursor name="Recruiter" color="#2f7bf5" tip="Recruiter is reading your CV…" className="left-[24%] top-[30%]" delay={1.5} from={{ x: -260, y: 40 }} />
-                <NamedCursor name="Tech lead" color="#1e9e6a" tip="Tech lead is checking the query plans…" className="right-[25%] top-[34%]" delay={1.6} from={{ x: 260, y: -40 }} />
+                <NamedCursor name="Recruiter" color="#2f7bf5" tip="Recruiter is reading your CV…" className="left-[24%] top-[30%] max-lg:hidden" delay={1.5} from={{ x: -260, y: 40 }} />
+                <NamedCursor name="Tech lead" color="#1e9e6a" tip="Tech lead is checking the query plans…" className="right-[25%] top-[34%] max-lg:hidden" delay={1.6} from={{ x: 260, y: -40 }} />
               </>
             )}
           </div>
@@ -196,12 +197,12 @@ export function Hero() {
       <Ticker ready={ready} />
 
       <motion.div
-        className="container-page mt-10 flex flex-wrap items-center justify-center gap-3"
+        className="container-page mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:flex sm:flex-wrap sm:items-center sm:justify-center"
         initial={{ opacity: 0, y: 14 }}
         animate={ready ? { opacity: 1, y: 0 } : undefined}
         transition={{ duration: 0.5, ease, delay: 1.85 }}
       >
-        <a href="#work" className="btn btn-ink">
+        <a href="#work" className="btn btn-ink col-span-2">
           See what I built <span aria-hidden>→</span>
         </a>
         <a href={profile.links.resume} className="btn btn-ghost" download>

@@ -38,10 +38,10 @@ export function GameDream() {
   };
 
   return (
-    <section id="dream" className="py-10 md:py-14">
+    <section id="dream" className="scroll-mt-16 py-6 md:py-14">
       <div className="container-page">
         {/* CRT turn-on. The trigger is the unclipped wrapper: a fully clipped element never counts as in view. */}
-        <motion.div initial="off" whileInView="on" viewport={{ once: true, amount: 0.2 }}>
+        <motion.div initial="off" whileInView="on" viewport={{ once: true, amount: 0.1 }}>
           <motion.div
             className="scanlines relative overflow-hidden border-[2.5px] border-ink bg-night px-5 py-10 text-white shadow-[5px_6px_0_#141210] md:px-14 md:py-12"
             style={{ borderRadius: "28px 34px 26px 32px / 32px 26px 34px 28px" }}
@@ -114,7 +114,7 @@ export function GameDream() {
                       className="space-y-2.5"
                       initial="hidden"
                       whileInView="show"
-                      viewport={{ once: true, amount: 0.6 }}
+                      viewport={{ once: true, amount: 0.1 }}
                       variants={{ show: { transition: { staggerChildren: 0.2, delayChildren: 0.2 } } }}
                     >
                       {dream.quests.map((q) => (
