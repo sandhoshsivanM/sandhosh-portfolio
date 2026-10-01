@@ -22,8 +22,8 @@ export function CaseNotes() {
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: 0.6, ease, delay: (i % 2) * 0.08 }}
             >
-              <article className="relative flex w-full flex-col rounded-[6px] p-6 shadow-soft md:p-8" style={{ background: n.tint }}>
-                <span className="tape -top-3 left-6 -rotate-3" />
+              <article className="relative flex w-full flex-col border-2 border-ink p-6 shadow-[3px_4px_0_#141210] md:p-8 rounded-[14px_22px_16px_24px/22px_14px_24px_16px]" style={{ background: n.tint }}>
+                <span className={`tape tape-${(i % 3) + 2} -top-4 left-6 -rotate-3`} />
                 <motion.div
                   aria-hidden
                   className="absolute -right-3 -top-5 w-16 md:w-20"

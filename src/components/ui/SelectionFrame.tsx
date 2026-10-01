@@ -50,7 +50,7 @@ export function SelectionFrame({ children, label, fill = "var(--color-accent)", 
       </span>
       {label && (
         <motion.span
-          className="absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2 whitespace-nowrap rounded-[4px] bg-frame px-2 py-[3px] font-mono text-[11px] font-semibold text-white max-sm:hidden"
+          className="absolute left-1/2 top-full z-10 mt-3 -translate-x-1/2 whitespace-nowrap rounded-[6px] bg-frame px-3 py-1 font-mono text-[13px] font-semibold text-white md:px-4 md:py-1.5 md:text-[16px]"
           variants={{ hidden: { scale: 0, opacity: 0 }, show: { scale: 1, opacity: 1, transition: { ...springPop, delay: delay + 0.9 } } }}
         >
           {label}

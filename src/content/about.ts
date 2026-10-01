@@ -11,13 +11,12 @@ export const stats = [
   { value: 500, suffix: "+", prefix: "", label: "online at the same time", hood: "Peak concurrent users" },
 ];
 
-// DRAFT from the build guide: to be replaced with Sandhosh's own words.
 export const heart = [
-  "Before I built my first API, I wanted to make games. I still do. At night I build them from scratch in C#: my own physics, my own sound, my own bugs. One day I want to make games for a living.",
+  "I grew up on Assassin's Creed, Red Dead Redemption, GTA and both Ori games, and somewhere along the way I wanted to make them, not just play them. I've shipped one small game so far, built from scratch in C#. I'm a rookie, and I'm learning fast.",
   "The rest of my free time goes to money: how it grows, how to invest it, how to keep it. I study personal finance and investing for myself, and that curiosity is exactly why I built Khazana.",
 ];
 
 export const hobbies = [
-  { title: "Making games", line: "I build small games from scratch, just for the joy of it.", sticker: "/assets/game/gamepad.webp", tint: "var(--color-note-sky)" },
+  { title: "Making games", line: "Rookie game developer. One game shipped, many more planned.", sticker: "/assets/game/gamepad.webp", tint: "var(--color-note-sky)" },
   { title: "Money that grows", line: "I study personal finance and investing, and I use what I learn.", sticker: "/assets/game/coin.webp", tint: "var(--color-note-mint)" },
 ];

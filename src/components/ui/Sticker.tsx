@@ -32,10 +32,7 @@ export function Sticker({ src, alt, size, rotate = 0, className = "", delay = 0,
       whileHover={reduce ? undefined : { scale: 1.06, rotate: rotate - 3, y: -4 }}
       whileDrag={{ scale: 1.12, zIndex: 40 }}
     >
-      <motion.div
-        animate={float && !reduce ? { y: [0, -7, 0] } : undefined}
-        transition={{ duration: 4 + (delay * 10) % 2, repeat: Infinity, ease: "easeInOut", delay: delay + 1 }}
-      >
+      <div className={float ? "float-y" : ""} style={{ animationDelay: `${-(delay * 7) % 4}s` }}>
         <Image
           src={src}
           alt={alt}
@@ -45,7 +42,7 @@ export function Sticker({ src, alt, size, rotate = 0, className = "", delay = 0,
           draggable={false}
           className="h-auto w-full drop-shadow-[0_10px_14px_rgba(40,20,10,0.32)]"
         />
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

@@ -40,6 +40,7 @@ ASSETS = {
     # avatar
     "2C37D240": ("avatar", "boy", ALPHA),
     "7C143548": ("avatar", "hand", ALPHA),
+    "4148EFB5": ("avatar", "boy-controller", ALPHA),
     # doodles
     "88A6E0ED": ("doodles", "pencil", ALPHA),
     "50280CFD": ("doodles", "bulb", ALPHA),
@@ -64,6 +65,7 @@ ASSETS = {
     "92C0D407": ("paper", "torn-strip", WHITE),
     "40B2CF29": ("paper", "card", ALPHA),
     "E25985F3": ("paper", "texture", NONE),
+    "57CD74CD": ("tape", "tape-wide", CHECKER),
     # icons
     "1AA95420": ("icons", "linkedin", ALPHA),
     "78FFC8E9": ("icons", "github", ALPHA),
@@ -75,6 +77,7 @@ ASSETS = {
 SHEETS = {
     "D375D076": ("icons", ["ai-claude", "ai-cursor", "ai-copilot"], 6),
     "68AFD842": ("icons", ["ai-claude-alt", "ai-cursor-alt", "ai-copilot-alt"], 6),
+    "ACEC054B": ("tape", [f"tape-{i:02d}" for i in range(1, 14)], 3),
     "EE59C8BB": ("game", [
         "gamepad", "handheld", "pixel-heart", "star", "mushroom", "question-block",
         "gem", "coin", "console", "invader", "sword", "bomb", "wing", "flag",

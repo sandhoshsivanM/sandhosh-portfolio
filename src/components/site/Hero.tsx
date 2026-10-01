@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useTransform } from "framer-motion";
 import { profile } from "@/content/profile";
 import { useEyeFollow } from "@/hooks/useEyeFollow";
 import { useIntroReady } from "@/lib/intro";
@@ -14,19 +14,24 @@ const WELCOME = "WELCOME TO MY";
 // Stickers on the wall. `phone` ones stay on small screens, `tablet` from md.
 const STICKERS = [
   { src: "csharp", alt: "C#", cls: "left-[4%] top-[52%] max-md:left-[3%] max-md:top-[6%]", r: -10, d: 0.7, show: "all" },
-  { src: "dotnet", alt: ".NET", cls: "left-[34%] top-[5%]", r: 8, d: 0.79, show: "tablet" },
+  { src: "dotnet", alt: ".NET", cls: "left-[30%] top-[6%]", r: 8, d: 0.79, show: "tablet" },
   { src: "sql", alt: "SQL Server", cls: "right-[4%] top-[50%] max-md:right-[3%] max-md:top-[6%]", r: 9, d: 0.88, show: "all" },
-  { src: "redis", alt: "Redis", cls: "right-[34%] top-[4%]", r: -7, d: 0.97, show: "tablet" },
-  { src: "docker", alt: "Docker", cls: "left-[17%] bottom-[6%]", r: 6, d: 1.06, show: "desktop" },
-  { src: "azure", alt: "Azure", cls: "right-[17%] bottom-[8%]", r: -6, d: 1.15, show: "desktop" },
+  { src: "redis", alt: "Redis", cls: "right-[30%] top-[5%]", r: -7, d: 0.97, show: "tablet" },
+  { src: "docker", alt: "Docker", cls: "left-[15%] bottom-[8%]", r: 6, d: 1.06, show: "desktop" },
+  { src: "azure", alt: "Azure", cls: "right-[15%] bottom-[10%]", r: -6, d: 1.15, show: "desktop" },
 ] as const;
+
+const WALL_H = "clamp(240px, 30vw, 360px)";
+// The anchor is wider than the boy so the hands can rest beside his shoulders.
+const BOY_W = "clamp(290px, 40vw, 440px)";
 
 const showClass = { all: "", tablet: "max-md:hidden", desktop: "max-lg:hidden" } as const;
 
 export function Hero() {
   const ready = useIntroReady();
   const reduce = useReducedMotion();
-  const { ref: faceRef, offset } = useEyeFollow<HTMLDivElement>(9);
+  const { ref: faceRef, x: eyeX, y: eyeY } = useEyeFollow<HTMLDivElement>(9);
+  const tilt = useTransform(eyeX, (v) => v * 0.5);
   const state = ready ? "show" : "hidden";
 
   return (
@@ -48,12 +53,12 @@ export function Hero() {
         </motion.p>
 
         {/* The wall */}
-        <div className="relative mx-auto max-w-[980px]">
+        <div className="relative mx-auto max-w-[1160px]">
           <motion.div
-            className="relative overflow-hidden rounded-[26px] shadow-[0_30px_60px_-30px_rgba(110,40,90,.55)]"
-            style={{ height: "clamp(220px, 28vw, 320px)", background: "var(--wall)", transformOrigin: "bottom" }}
-            initial={{ scaleY: 0.85, opacity: 0, filter: "brightness(.6)" }}
-            animate={ready ? { scaleY: 1, opacity: 1, filter: "brightness(1)" } : undefined}
+            className="relative overflow-hidden border-[2.5px] border-ink shadow-[5px_6px_0_#141210]"
+            style={{ height: WALL_H, background: "var(--wall)", transformOrigin: "bottom", borderRadius: "28px 34px 26px 32px / 32px 26px 34px 28px" }}
+            initial={{ scaleY: 0.85, opacity: 0 }}
+            animate={ready ? { scaleY: 1, opacity: 1 } : undefined}
             transition={{ duration: 0.5, ease, delay: 0.2 }}
           >
             {/* brick grid */}
@@ -84,7 +89,7 @@ export function Hero() {
                   key={s.src}
                   src={`/assets/stickers/${s.src}-sm.webp`}
                   alt={s.alt}
-                  size="clamp(54px, 8vw, 92px)"
+                  size="clamp(54px, 7.6vw, 96px)"
                   rotate={s.r}
                   delay={s.d}
                   className={`${s.cls} ${showClass[s.show]}`}
@@ -98,49 +103,49 @@ export function Hero() {
             )}
           </div>
 
-          {/* The boy peeks over the ledge: clipped at the wall's bottom edge. */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center"
-            style={{ height: "calc(clamp(220px, 28vw, 320px) + 40px)", clipPath: "inset(-50% -50% 0 -50%)" }}
-          >
-            <motion.div
-              ref={faceRef}
-              className="relative w-[clamp(150px,22vw,230px)] self-end"
-              initial={{ y: "62%" }}
-              animate={ready ? { y: "38%" } : undefined}
-              transition={{ type: "spring", stiffness: 140, damping: 16, delay: 0.5 }}
-            >
-              <motion.div animate={reduce ? undefined : { x: offset.x, y: offset.y * 0.6, rotate: offset.x * 0.5 }} transition={{ type: "spring", stiffness: 120, damping: 14 }}>
-                <Image src="/assets/avatar/boy.webp" alt="Illustrated portrait of Sandhosh" width={936} height={1024} priority className="h-auto w-full" />
+          {/* The boy and his hands share one anchor at the ledge, so they scale and line up together. */}
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2" style={{ width: BOY_W }}>
+            {/* window: everything below the ledge is cut off */}
+            <div className="absolute inset-x-[-15%] bottom-0 overflow-hidden" style={{ height: `calc(${WALL_H} + 40px)` }}>
+              <motion.div
+                ref={faceRef}
+                className="absolute bottom-0 left-[28.85%] w-[42.3%]"
+                initial={{ y: "70%" }}
+                animate={ready ? { y: "40%" } : undefined}
+                transition={{ type: "spring", stiffness: 140, damping: 16, delay: 0.5 }}
+              >
+                <motion.div style={reduce ? undefined : { x: eyeX, y: eyeY, rotate: tilt }}>
+                  <Image src="/assets/avatar/boy.webp" alt="Illustrated portrait of Sandhosh" width={936} height={1024} priority className="h-auto w-full" />
+                </motion.div>
               </motion.div>
-            </motion.div>
+            </div>
+            {/* hands grip the ledge: half above, half below the edge */}
+            {(["left", "right"] as const).map((side, i) => (
+              <motion.div
+                key={side}
+                aria-hidden
+                className="absolute bottom-0 w-[26%]"
+                style={side === "left" ? { left: "8%" } : { right: "8%" }}
+                initial={{ y: "-60%", opacity: 0 }}
+                animate={ready ? { y: "42%", opacity: 1 } : undefined}
+                transition={{ ...springPop, delay: 0.95 + i * 0.08 }}
+              >
+                <Image src="/assets/avatar/hand-sm.webp" alt="" width={400} height={177} className={`h-auto w-full ${side === "left" ? "" : "-scale-x-100"}`} />
+              </motion.div>
+            ))}
           </div>
-          {/* hands on the ledge */}
-          {(["left", "right"] as const).map((side, i) => (
-            <motion.div
-              key={side}
-              aria-hidden
-              className="absolute bottom-[-18px] w-[clamp(54px,7.4vw,80px)]"
-              style={side === "left" ? { right: "calc(50% + clamp(26px, 4.4vw, 46px))" } : { left: "calc(50% + clamp(26px, 4.4vw, 46px))" }}
-              initial={{ y: -40, opacity: 0, scaleY: 1 }}
-              animate={ready ? { y: 0, opacity: 1, scaleY: [1, 0.86, 1] } : undefined}
-              transition={{ ...springPop, delay: 0.95 + i * 0.08 }}
-            >
-              <Image src="/assets/avatar/hand-sm.webp" alt="" width={400} height={177} className={`h-auto w-full ${side === "left" ? "" : "-scale-x-100"}`} />
-            </motion.div>
-          ))}
         </div>
 
-        {/* Sandhosh / DEVELOPER. */}
-        <div className="relative mx-auto mt-14 flex w-fit flex-col items-center md:mt-24">
+        {/* Sandhoshsivan / DEVELOPER. */}
+        <div className="relative mx-auto mt-20 flex w-fit flex-col items-center md:mt-32">
           <motion.span
             aria-hidden
-            className="absolute -left-[0.25em] -top-[0.9em] z-10 -rotate-[8deg] font-sign text-[clamp(44px,8vw,104px)] leading-none text-ink"
-            initial={{ clipPath: "inset(-20% 100% -20% 0)" }}
-            animate={ready ? { clipPath: "inset(-20% 0% -20% 0)" } : undefined}
-            transition={{ duration: 0.8, ease: "easeInOut", delay: 0.9 }}
+            className="absolute -left-[0.2em] -top-[0.95em] z-10 -rotate-[6deg] whitespace-nowrap font-sign text-[clamp(40px,6.6vw,88px)] leading-none text-ink"
+            initial={{ clipPath: "inset(-30% 100% -30% 0%)" }}
+            animate={ready ? { clipPath: "inset(-30% 0% -30% 0%)" } : undefined}
+            transition={{ duration: 0.9, ease: "easeInOut", delay: 0.9 }}
           >
-            Sandhosh
+            {profile.signature}
           </motion.span>
           {ready ? (
             <SelectionFrame label={profile.sizeLabel} delay={1.0}>
@@ -151,7 +156,7 @@ export function Hero() {
           ) : (
             <h1 className="h-hero invisible px-[0.14em] pb-[0.06em] pt-[0.1em]">DEVELOPER.</h1>
           )}
-          {ready && <NamedCursor name="You" color="#ff5b1f" className="-right-12 -bottom-10" delay={1.6} from={{ x: 120, y: 80 }} flip />}
+          {ready && <NamedCursor name="You" color="#ff5b1f" className="-right-12 -bottom-12" delay={1.6} from={{ x: 120, y: 80 }} flip />}
           {ready && (
             <motion.div
               aria-hidden
@@ -166,7 +171,7 @@ export function Hero() {
         </div>
 
         <motion.div
-          className="mx-auto mt-12 max-w-[640px] text-center"
+          className="mx-auto mt-16 max-w-[640px] text-center"
           initial={{ opacity: 0, y: 14 }}
           animate={ready ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.5, ease, delay: 1.7 }}

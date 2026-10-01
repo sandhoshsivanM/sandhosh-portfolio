@@ -81,7 +81,7 @@ export function Loader() {
           role="status"
         >
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease }} className="relative w-[min(440px,calc(100vw-32px))]">
-            <span className="tape -top-3 left-1/2 -ml-[52px] rotate-[-3deg]" />
+            <span className="tape -top-4 left-1/2 -ml-[60px] rotate-[-3deg]" />
             <div className="rounded-2xl bg-[#1a1714] p-5 font-mono text-[13px] leading-7 text-[#e9e4d8] shadow-[0_24px_50px_-20px_rgba(20,18,16,.6)]">
               {LINES.slice(0, shown).map(([l, r]) => (
                 <div key={l} className="flex justify-between gap-4 whitespace-pre">

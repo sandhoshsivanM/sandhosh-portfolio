@@ -1,6 +1,5 @@
 "use client";
-import Lenis from "lenis";
-import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const NAV = [
@@ -10,24 +9,6 @@ const NAV = [
   { id: "notes", label: "Notes" },
   { id: "contact", label: "Contact" },
 ];
-
-/** Lenis smooth scrolling with gliding anchor links. Off for reduced motion. */
-export function SmoothScroll() {
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    if (reduce) return;
-    const lenis = new Lenis({ anchors: { offset: -24 }, lerp: 0.12 });
-    let raf = requestAnimationFrame(function loop(t) {
-      lenis.raf(t);
-      raf = requestAnimationFrame(loop);
-    });
-    return () => {
-      cancelAnimationFrame(raf);
-      lenis.destroy();
-    };
-  }, [reduce]);
-  return null;
-}
 
 /** A pencil line drawing across the top edge. */
 export function ScrollProgress() {
@@ -68,7 +49,7 @@ export function Nav() {
       transition={{ duration: 0.3 }}
       style={{ pointerEvents: visible ? "auto" : "none" }}
     >
-      <ul className="flex items-center gap-0.5 rounded-full border border-line bg-white/85 p-1.5 shadow-[0_12px_30px_-14px_rgba(20,18,16,.45)] backdrop-blur-md">
+      <ul className="sketch-pill flex items-center gap-0.5 bg-[#fffdf7] p-1.5">
         {NAV.map((n) => (
           <li key={n.id}>
             <a href={`#${n.id}`} className="relative flex min-h-11 items-center px-3 text-[14px] font-semibold sm:px-4" aria-current={active === n.id ? "true" : undefined}>

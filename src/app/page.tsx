@@ -1,6 +1,6 @@
 import { About } from "@/components/site/About";
 import { CaseNotes } from "@/components/site/CaseNotes";
-import { Nav, ScrollProgress, SmoothScroll } from "@/components/site/Chrome";
+import { Nav, ScrollProgress } from "@/components/site/Chrome";
 import { Contact } from "@/components/site/Contact";
 import { ErpModules } from "@/components/site/ErpModules";
 import { Footer } from "@/components/site/Footer";
@@ -15,7 +15,6 @@ export default function Home() {
   return (
     <>
       <Loader />
-      <SmoothScroll />
       <ScrollProgress />
       <Nav />
       <main>

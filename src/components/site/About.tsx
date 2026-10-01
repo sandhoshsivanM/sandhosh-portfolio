@@ -21,7 +21,7 @@ export function About() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, ease }}
           >
-            <div aria-hidden className="absolute inset-0 -rotate-1 rounded-[6px] bg-[#fffdf7] shadow-soft" />
+            <div aria-hidden className="sketch absolute inset-0 -rotate-1" />
             <motion.span
               aria-hidden
               className="tape -top-3 left-10 z-10 -rotate-6"
@@ -76,9 +76,9 @@ export function About() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ ...springPop, stiffness: 160 }}
           >
-            <div className="relative -rotate-2 rounded-[4px] bg-white p-3 pb-14 shadow-soft">
-              <span className="tape -top-3 left-1/2 -ml-[52px] rotate-2" />
-              <div className="aspect-square overflow-hidden bg-[linear-gradient(140deg,#ffd2bc,#d6e2ff)]">
+            <div className="sketch relative -rotate-2 p-3 pb-14">
+              <span className="tape tape-3 -top-4 left-1/2 -ml-[60px] rotate-2" />
+              <div className="aspect-square overflow-hidden border-2 border-ink bg-[linear-gradient(140deg,#ffd2bc,#d6e2ff)]">
                 <Image src="/assets/avatar/boy.webp" alt="Illustrated portrait of Sandhosh" width={936} height={1024} className="mx-auto mt-6 h-auto w-[86%]" />
               </div>
               <figcaption className="absolute inset-x-0 bottom-3 text-center font-hand text-[24px]">me, off the clock</figcaption>
@@ -101,7 +101,7 @@ export function About() {
                 <motion.li
                   key={h.title}
                   variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease } } }}
-                  className="relative flex flex-col rounded-[20px] border border-line p-5 shadow-soft"
+                  className="relative flex flex-col border-2 border-ink p-5 shadow-[3px_4px_0_#141210] rounded-[14px_22px_16px_24px/22px_14px_24px_16px]"
                   style={{ background: h.tint }}
                 >
                   <Image src={h.sticker} alt="" width={200} height={200} className="absolute -right-3 -top-5 w-14 rotate-12 drop-shadow-md" />

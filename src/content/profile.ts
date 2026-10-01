@@ -1,10 +1,11 @@
 export const profile = {
   name: "Sandhoshsivan M",
   short: "Sandhosh",
+  signature: "Sandhoshsivan",
   role: "Backend Developer",
   sizeLabel: ".NET · Backend",
   headline: "I build the backend a 2,000-person company runs on.",
-  subline: ".NET developer by day. Game maker by night.",
+  subline: ".NET developer by day. Rookie game maker by night.",
   location: "Coimbatore, India",
   email: "sandhoshsivan00@gmail.com",
   links: {
@@ -17,7 +18,7 @@ export const profile = {
     ".NET Backend Developer",
     "Coimbatore, India",
     "Open to new roles",
-    "Future game developer",
+    "Rookie game developer",
   ],
   seo: {
     title: "Sandhoshsivan M · .NET Backend Developer",

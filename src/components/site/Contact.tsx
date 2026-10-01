@@ -104,7 +104,7 @@ export function Contact() {
             </div>
             <label className="flex flex-col gap-1.5 text-[14px] font-semibold">
               Message
-              <textarea name="message" required rows={4} maxLength={4000} className="rounded-xl border border-line bg-white px-4 py-3 text-[16px] font-normal outline-none focus:border-frame" />
+              <textarea name="message" required rows={4} maxLength={4000} className="rounded-xl border-[1.5px] border-ink bg-white px-4 py-3 text-[16px] font-normal outline-none focus:border-frame" />
             </label>
             <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
             <div className="flex flex-wrap items-center gap-4">
@@ -133,8 +133,8 @@ export function Contact() {
             </div>
           </form>
 
-          <aside className="relative rounded-[6px] bg-note-yellow p-6 shadow-soft md:p-7">
-            <span className="tape -top-3 left-1/2 -ml-[52px] rotate-3" />
+          <aside className="relative border-2 border-ink bg-note-yellow p-6 shadow-[3px_4px_0_#141210] md:p-7 rounded-[14px_22px_16px_24px/22px_14px_24px_16px]">
+            <span className="tape tape-2 -top-4 left-1/2 -ml-[60px] rotate-3" />
             <h3 className="font-display text-[20px] font-extrabold">In a hurry?</h3>
             <dl className="mt-4 space-y-3 text-[15px]">
               {profile.hurry.map(([k, v]) => (
@@ -158,7 +158,7 @@ function Field({ name, label, type = "text", autoComplete }: { name: string; lab
   return (
     <label className="flex flex-col gap-1.5 text-[14px] font-semibold">
       {label}
-      <input name={name} type={type} required autoComplete={autoComplete} maxLength={200} className="min-h-12 rounded-xl border border-line bg-white px-4 text-[16px] font-normal outline-none focus:border-frame" />
+      <input name={name} type={type} required autoComplete={autoComplete} maxLength={200} className="min-h-12 rounded-xl border-[1.5px] border-ink bg-white px-4 text-[16px] font-normal outline-none focus:border-frame" />
     </label>
   );
 }

@@ -30,10 +30,10 @@ export function ErpModules() {
               whileHover={{ y: -4 }}
             >
               {/* grid cell stays straight; only the paper layer tilts */}
-              <div aria-hidden className="absolute inset-0 rounded-[4px] bg-white shadow-soft" style={{ rotate: `${TILT[i]}deg` }} />
+              <div aria-hidden className="sketch absolute inset-0" style={{ rotate: `${TILT[i]}deg` }} />
               <motion.span
                 aria-hidden
-                className="tape -top-3 left-1/2 z-10 -ml-[52px]"
+                className={`tape tape-${(i % 4) + 1} -top-3 left-1/2 z-10 -ml-[60px]`}
                 style={{ rotate: `${-TILT[i] * 3}deg` }}
                 initial={{ opacity: 0, scale: 0.6 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -41,7 +41,7 @@ export function ErpModules() {
                 transition={{ ...springPop, delay: 0.35 + (i % 3) * 0.08 }}
               />
               <article className="relative flex h-full flex-col p-3 pb-5">
-                <div className="aspect-[16/10] overflow-hidden rounded-[2px] border border-line bg-paper">
+                <div className="aspect-[16/10] overflow-hidden rounded-[6px] border-[1.5px] border-ink bg-paper">
                   <Screen kind={m.screen} />
                 </div>
                 <div className="flex flex-1 flex-col px-2 pt-4">

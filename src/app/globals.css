@@ -34,6 +34,9 @@
   --shadow-soft: 0 1px 0 rgb(0 0 0 / 0.04), 0 18px 40px -18px rgb(30 20 10 / 0.28);
   --shadow-sticker: 0 1px 1px rgb(0 0 0 / 0.08), 0 10px 22px -8px rgb(40 20 10 / 0.38);
   --shadow-hard: 8px 8px 0 #141210;
+  --shadow-ink: 3px 4px 0 #141210;
+  --radius-wobble: 14px 22px 16px 24px / 22px 14px 24px 16px;
+  --radius-wobble-pill: 255px 18px 225px 18px / 18px 225px 18px 255px;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -68,13 +71,9 @@ body {
   color: #fff;
 }
 
-/* Lenis */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
 }
 
 /* Keyboard focus: the blue selection frame with corner handles. */
@@ -133,11 +132,19 @@ html.lenis body {
     letter-spacing: -0.015em;
   }
 
-  .card {
-    background: #fbfaf6;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-soft);
+  /* Hand-drawn card: paper, ink outline, wobbly corners, hard ink shadow.
+     Same language as the die-cut stickers. */
+  .card,
+  .sketch {
+    background: #fffdf7 url(/assets/paper/texture-sm.webp) center / 420px auto;
+    border: 2px solid var(--color-ink);
+    border-radius: var(--radius-wobble);
+    box-shadow: var(--shadow-ink);
+  }
+  .sketch-pill {
+    border: 2px solid var(--color-ink);
+    border-radius: var(--radius-wobble-pill);
+    box-shadow: var(--shadow-ink);
   }
 
   /* Hand-drawn underline that draws in on hover. */
@@ -152,15 +159,23 @@ html.lenis body {
     background-size: 100% 1.5px;
   }
 
-  /* Torn masking tape. */
+  /* Masking tape from the tape sheet; .tape-2/3/4 vary the strip. */
   .tape {
     position: absolute;
-    height: 26px;
-    width: 104px;
-    background: rgb(255 214 102 / 0.72);
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
-    clip-path: polygon(2% 8%, 7% 0, 14% 10%, 22% 2%, 30% 9%, 38% 1%, 47% 8%, 55% 0, 63% 9%, 71% 2%, 79% 10%, 87% 1%, 94% 8%, 100% 3%, 98% 92%, 92% 100%, 85% 91%, 77% 99%, 69% 92%, 61% 100%, 53% 91%, 45% 99%, 37% 92%, 29% 100%, 21% 91%, 13% 99%, 6% 92%, 0 97%);
-    mix-blend-mode: multiply;
+    height: 34px;
+    width: 120px;
+    background: url(/assets/tape/tape-06-sm.webp) center / contain no-repeat;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18));
+    pointer-events: none;
+  }
+  .tape-2 {
+    background-image: url(/assets/tape/tape-09-sm.webp);
+  }
+  .tape-3 {
+    background-image: url(/assets/tape/tape-12-sm.webp);
+  }
+  .tape-4 {
+    background-image: url(/assets/tape/tape-05-sm.webp);
   }
 
   .btn {
@@ -170,7 +185,9 @@ html.lenis body {
     gap: 8px;
     min-height: 48px;
     padding: 0 22px;
-    border-radius: 999px;
+    border: 2px solid var(--color-ink);
+    border-radius: var(--radius-wobble-pill);
+    box-shadow: var(--shadow-ink);
     font-weight: 600;
     font-size: 15px;
     transition:
@@ -180,35 +197,36 @@ html.lenis body {
     will-change: transform;
   }
   .btn:hover {
-    transform: translateY(-2px);
+    transform: translate(-1px, -2px);
+    box-shadow: 4px 6px 0 var(--color-ink);
   }
   .btn:active {
-    transform: translateY(1px);
+    transform: translate(2px, 3px);
+    box-shadow: 1px 1px 0 var(--color-ink);
   }
   .btn-ink {
     background: var(--color-ink);
     color: var(--color-paper);
-    box-shadow: 0 10px 22px -10px rgb(20 18 16 / 0.6);
+    box-shadow: 3px 4px 0 var(--color-accent);
   }
-  .btn-ink:active {
-    box-shadow: 0 4px 10px -6px rgb(20 18 16 / 0.6);
+  .btn-ink:hover {
+    box-shadow: 4px 6px 0 var(--color-accent);
   }
   .btn-ghost {
-    border: 1.5px solid var(--color-ink);
-    background: rgb(255 255 255 / 0.5);
+    background: #fffdf7;
   }
   .btn-ghost:hover {
-    background: #fff;
+    background: var(--color-note-yellow);
   }
 
   .chip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 1px solid var(--color-line);
-    background: #fff;
+    padding: 3px 10px;
+    border-radius: var(--radius-wobble-pill);
+    border: 1.5px solid var(--color-ink);
+    background: #fffdf7;
     font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 500;
@@ -236,6 +254,35 @@ html.lenis body {
   animation: ticker 38s linear infinite;
 }
 
+/* Idle loops run in CSS so they stay on the compositor. */
+@keyframes float-y {
+  50% {
+    transform: translateY(-7px);
+  }
+}
+.float-y {
+  animation: float-y 4.2s ease-in-out infinite;
+}
+@keyframes drift {
+  33% {
+    transform: translate(10px, -6px);
+  }
+  66% {
+    transform: translate(-4px, 4px);
+  }
+}
+.drift {
+  animation: drift 7s ease-in-out infinite;
+}
+@keyframes scan {
+  50% {
+    transform: translateY(var(--scan-h, 100px));
+  }
+}
+.scan {
+  animation: scan 2.4s ease-in-out infinite;
+}
+
 @keyframes caret {
   50% {
     opacity: 0;
@@ -248,6 +295,9 @@ html.lenis body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
@@ -255,7 +305,10 @@ html.lenis body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .ticker-track {
+  .ticker-track,
+  .float-y,
+  .drift,
+  .scan {
     animation: none;
   }
 }
