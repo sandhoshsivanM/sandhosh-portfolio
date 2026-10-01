@@ -49,10 +49,10 @@ export function Nav() {
       transition={{ duration: 0.3 }}
       style={{ pointerEvents: visible ? "auto" : "none" }}
     >
-      <ul className="sketch-pill flex items-center gap-0.5 bg-[#fffdf7] p-1.5">
+      <ul className="sketch-pill flex items-center gap-0.5 bg-[#fffdf7] p-1 sm:p-1.5">
         {NAV.map((n) => (
           <li key={n.id}>
-            <a href={`#${n.id}`} className="relative flex min-h-11 items-center px-3 text-[14px] font-semibold sm:px-4" aria-current={active === n.id ? "true" : undefined}>
+            <a href={`#${n.id}`} className="relative flex min-h-11 items-center px-2 text-[13px] font-semibold min-[380px]:px-3 min-[380px]:text-[14px] sm:px-4" aria-current={active === n.id ? "true" : undefined}>
               {n.label}
               {active === n.id && (
                 <motion.svg layoutId="nav-squiggle" viewBox="0 0 60 8" className="absolute inset-x-2 bottom-1.5 h-2 w-[calc(100%-16px)] text-accent" preserveAspectRatio="none" aria-hidden>

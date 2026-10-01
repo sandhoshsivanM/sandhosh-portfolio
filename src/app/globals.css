@@ -114,7 +114,7 @@ html {
   .h-hero {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(52px, 10vw, 124px);
+    font-size: clamp(40px, 12.5vw, 124px);
     line-height: 0.9;
     letter-spacing: -0.035em;
   }

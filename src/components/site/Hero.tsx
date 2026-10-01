@@ -22,7 +22,7 @@ const STICKERS = [
 ] as const;
 
 const WALL_H = "clamp(240px, 30vw, 360px)";
-const PEEK_W = "clamp(290px, 36vw, 450px)";
+const PEEK_W = "clamp(220px, 36vw, 450px)";
 // How far the head sits below the wall edge: hides the mouth, shows the eyes.
 // The idle loop lifts it 12% now and then so the smile shows.
 const HEAD_PEEK = "27%";
@@ -122,7 +122,7 @@ export function Hero() {
                   transition={{ duration: 6, times: [0, 0.55, 0.65, 0.85, 1], repeat: Infinity, ease: "easeInOut", delay: 2.4 }}
                 >
                   <motion.div style={reduce ? undefined : { x: eyeX, rotate: tilt }}>
-                    <Image src="/assets/avatar/head.webp" alt="Illustrated Sandhosh peeking over the wall" width={1024} height={955} priority className="h-auto w-full" />
+                    <Image src="/assets/avatar/head.webp" alt="Illustrated Sandhoshsivan peeking over the wall" width={1024} height={955} priority className="h-auto w-full" />
                   </motion.div>
                 </motion.div>
               </motion.div>

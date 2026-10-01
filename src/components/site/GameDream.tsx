@@ -11,8 +11,8 @@ import { PixelDemo } from "./PixelDemo";
 
 // Pinned to the panel's four corners, same inset each, so they frame the content.
 const FLOATERS = [
-  { src: "coin", cls: "left-[3%] top-[5%]", r: -10 },
-  { src: "pixel-heart", cls: "right-[3%] top-[5%]", r: 12 },
+  { src: "coin", cls: "left-[3%] top-[5%] max-md:hidden", r: -10 },
+  { src: "pixel-heart", cls: "right-[3%] top-[5%] max-md:hidden", r: 12 },
   { src: "trophy", cls: "left-[3%] bottom-[5%] max-lg:hidden", r: -8 },
   { src: "question-block", cls: "right-[3%] bottom-[5%] max-lg:hidden", r: 8 },
 ];
@@ -78,9 +78,9 @@ export function GameDream() {
               </h2>
               <p className="mx-auto mt-4 w-fit border-2 border-neon px-3 py-1.5 font-pixel text-[9px] text-neon md:text-[10px]">{dream.rookie}</p>
 
-              <div className="mt-8 grid items-center gap-x-10 gap-y-14 md:mt-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+              <div className="mt-8 grid items-center gap-x-10 gap-y-24 md:mt-10 md:gap-y-20 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
                 {/* hand-drawn TV, with me sitting at its corner playing */}
-                <div className="relative mx-auto w-full max-w-[600px] lg:pr-16">
+                <div className="relative mx-auto w-full max-w-[600px] max-sm:pr-6 lg:pr-12 xl:pr-16">
                   <div className="border-[3px] border-white/90 bg-[#1b1636] p-3 shadow-[6px_6px_0_rgba(124,242,200,.5)] md:p-4" style={{ borderRadius: "30px 24px 32px 22px" }}>
                     <div className="relative aspect-video overflow-hidden rounded-[14px] border-2 border-black">
                       <PixelDemo label={`${dream.game}: a small pixel character runs and jumps across platforms collecting coins`} />
@@ -97,7 +97,7 @@ export function GameDream() {
                     type="button"
                     onClick={tapController}
                     aria-label="Me, playing. Tap five times for a secret"
-                    className="absolute -bottom-12 -right-2 w-[clamp(110px,20vw,170px)] transition-transform active:scale-95 lg:-right-14"
+                    className="absolute -bottom-16 -right-1 w-[clamp(104px,20vw,170px)] transition-transform active:scale-95 lg:-right-8 xl:-right-14"
                   >
                     <Image src="/assets/avatar/boy-controller-sm.webp" alt="" width={277} height={400} className="h-auto w-full drop-shadow-[0_8px_12px_rgba(0,0,0,.55)]" />
                   </button>
