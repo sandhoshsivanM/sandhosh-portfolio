@@ -73,22 +73,22 @@ export function Contact() {
           {/* Banner composition, drawn to the "Let's build" mockup */}
           <motion.div className="relative mt-24 w-[min(760px,100%)] md:mt-32" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }}>
             <h2 className="sr-only">Let&apos;s build together</h2>
-            {/* my head peeks over the banner from behind it, like the hero; the banner's paper hides the rest */}
-            <motion.div
-              aria-hidden
-              className="absolute bottom-[66%] left-1/2 w-[30%] -translate-x-1/2"
-              variants={{ hidden: { opacity: 0, y: "35%" }, show: { opacity: 1, y: "0%", transition: { type: "spring", stiffness: 150, damping: 14, delay: 0.35 } } }}
-            >
-              <div className="float-y">
-                <Image src="/assets/avatar/head-sm.webp" alt="" width={400} height={373} className="h-auto w-full -rotate-3" />
-              </div>
-            </motion.div>
             <motion.div
               aria-hidden
               className="relative"
               variants={{ hidden: { opacity: 0, scale: 1.25, rotate: -6 }, show: { opacity: 1, scale: 1, rotate: -2, transition: { type: "spring", stiffness: 220, damping: 16 } } }}
             >
               <Image src="/assets/contact/lets-build.webp" alt="" width={1024} height={378} className="h-auto w-full" />
+              {/* The boy leans over the banner. He lives inside the banner's layer so he tilts with it:
+                  his hoodie edge (row 345 of 440) sits on the paper's top edge (24% down the banner,
+                  sloping ~3deg), and his hands and pointing finger fall in front of it. */}
+              <motion.div
+                className="absolute left-[27%] top-[-55.7%] w-[46%]"
+                style={{ rotate: -3, transformOrigin: "50% 78%" }}
+                variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 150, damping: 15, delay: 0.35 } } }}
+              >
+                <Image src="/assets/contact/boy-point.webp" alt="" width={540} height={440} className="h-auto w-full" />
+              </motion.div>
             </motion.div>
             <motion.div
               aria-hidden

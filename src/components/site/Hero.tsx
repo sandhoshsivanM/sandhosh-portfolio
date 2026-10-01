@@ -22,6 +22,10 @@ const STICKERS = [
 ] as const;
 
 const WALL_H = "clamp(240px, 30vw, 360px)";
+const PEEK_W = "clamp(290px, 36vw, 450px)";
+// How far the head sits below the wall edge: hides the mouth, shows the eyes.
+// The idle loop lifts it 12% now and then so the smile shows.
+const HEAD_PEEK = "27%";
 
 const showClass = { all: "", tablet: "max-md:hidden", desktop: "max-lg:hidden" } as const;
 
@@ -101,20 +105,46 @@ export function Hero() {
             )}
           </div>
 
-          {/* The boy peeks over the ledge. One drawing (head and hands), positioned so its
-              drawn ledge line (85% down the image) sits on the wall's bottom edge. */}
-          <div className="pointer-events-none absolute bottom-0 left-1/2 w-[clamp(250px,32vw,400px)] -translate-x-1/2 translate-y-[15.3%]">
-            <motion.div
-              ref={faceRef}
-              initial={{ y: 40, opacity: 0, scale: 0.92 }}
-              animate={ready ? { y: 0, opacity: 1, scale: 1 } : undefined}
-              transition={{ type: "spring", stiffness: 160, damping: 15, delay: 0.5 }}
-              style={{ transformOrigin: "50% 85%" }}
-            >
-              <motion.div style={reduce ? undefined : { x: eyeX, rotate: tilt }}>
-                <Image src="/assets/peek/peek.webp" alt="Illustrated Sandhosh peeking over the wall" width={912} height={464} priority className="h-auto w-full" />
+          {/* The peek, in layers: the head rises from behind the wall (clipped at its edge)
+              and the two hands stay gripped on the edge in front of it. Each hand's erased
+              ledge stroke (60% / 53% down the image) sits exactly on the wall's bottom edge. */}
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2" style={{ width: PEEK_W }}>
+            <div className="absolute inset-x-[-10%] bottom-[3px] overflow-hidden" style={{ height: `calc(${PEEK_W} * 0.75)` }}>
+              <motion.div
+                ref={faceRef}
+                className="absolute bottom-0 left-[16%] w-[66%]"
+                initial={{ y: "95%" }}
+                animate={ready ? { y: HEAD_PEEK } : undefined}
+                transition={{ type: "spring", stiffness: 120, damping: 14, delay: 0.5 }}
+              >
+                <motion.div
+                  animate={ready && !reduce ? { y: ["0%", "0%", "-12%", "-12%", "0%"] } : undefined}
+                  transition={{ duration: 6, times: [0, 0.55, 0.65, 0.85, 1], repeat: Infinity, ease: "easeInOut", delay: 2.4 }}
+                >
+                  <motion.div style={reduce ? undefined : { x: eyeX, rotate: tilt }}>
+                    <Image src="/assets/avatar/head.webp" alt="Illustrated Sandhosh peeking over the wall" width={1024} height={955} priority className="h-auto w-full" />
+                  </motion.div>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            </div>
+            {(
+              [
+                ["l", "left-[2%]", 0.6, 216, 95],
+                ["r", "right-[2%]", 0.533, 224, 105],
+              ] as const
+            ).map(([side, pos, ledge, w, h], i) => (
+              <motion.div
+                key={side}
+                aria-hidden
+                className={`absolute w-[30%] ${pos}`}
+                style={{ top: `calc(${PEEK_W} * -0.3 * ${(h / w).toFixed(4)} * ${ledge})` }}
+                initial={{ y: -30, opacity: 0 }}
+                animate={ready ? { y: 0, opacity: 1 } : undefined}
+                transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.85 + i * 0.08 }}
+              >
+                <Image src={`/assets/peek/hand-grip-${side}.webp`} alt="" width={w} height={h} className="h-auto w-full" />
+              </motion.div>
+            ))}
           </div>
         </div>
 

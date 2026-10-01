@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={fonts} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: loaderBootScript }} />
-        <link rel="preload" as="image" href="/assets/peek/peek.webp" />
+        <link rel="preload" as="image" href="/assets/avatar/head.webp" />
         <noscript>
           <style>{`[style*="opacity:0"],[style*="opacity: 0"]{opacity:1!important;transform:none!important;clip-path:none!important}`}</style>
         </noscript>

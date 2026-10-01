@@ -48,7 +48,7 @@ export function Loader() {
     document.fonts.ready.then(tick);
     const img = new window.Image();
     img.onload = img.onerror = tick;
-    img.src = "/assets/peek/peek.webp";
+    img.src = "/assets/avatar/head.webp";
     const skip = () => finish();
     window.addEventListener("keydown", skip);
     window.addEventListener("pointerdown", skip);

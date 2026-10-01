@@ -181,9 +181,30 @@ def split(im: Image.Image, gap: int, keep: float = 0.08) -> list[Image.Image]:
     return [p[2] for r in rows for p in sorted(r, key=lambda t: t[1])]
 
 
-# Horizontal crops (fractions of the exported width) applied after trimming.
-# peek: the drawing's ledge line runs past the hands; the site's wall edge is the ledge.
-CROPS = {("peek", "peek"): (0.13, 0.895)}
+def erase_ledge(im: Image.Image) -> tuple[Image.Image, float]:
+    """Remove the drawn ledge stroke from a gripping-hand sticker.
+
+    The stroke is the dark band that spans most of the width; it is erased
+    everywhere except under the fingers, which are drawn over it. Returns the
+    clean image and the stroke's row as a fraction of the height, so the site
+    can sit that row on its own wall edge."""
+    a = np.array(im).copy()
+    r, g, b, al = (a[..., i].astype(int) for i in range(4))
+    dark = (al > 120) & (r + g + b < 200)
+    h, w = dark.shape
+    band = int(np.argmax(dark.sum(1)[h // 3:])) + h // 3
+    skin = (al > 200) & (r > 200) & (g > 130) & (b > 90) & (r - b > 60)
+    fingers = ndimage.binary_dilation(skin[band + 3:].any(0), iterations=4)
+    stroke = dark.copy()
+    stroke[: band - 6] = False
+    stroke[band + 7:] = False
+    stroke[:, fingers] = False
+    a[..., 3][stroke] = 0
+    labels, n = ndimage.label(a[..., 3] > 40)
+    if n > 1:
+        sizes = ndimage.sum(np.ones_like(labels), labels, range(1, n + 1))
+        a[..., 3][labels != 1 + int(np.argmax(sizes))] = 0
+    return Image.fromarray(a), band / h
 
 
 def raw(prefix: str) -> Path:
@@ -200,9 +221,9 @@ def main() -> None:
         assert len(pieces) == len(names), f"{prefix}: {len(pieces)} pieces, {len(names)} names"
         for name, piece in zip(names, pieces):
             piece = trim(piece)
-            if (group, name) in CROPS:
-                lo, hi = CROPS[(group, name)]
-                piece = piece.crop((round(piece.width * lo), 0, round(piece.width * hi), piece.height))
+            if (group, name) in (("peek", "hand-grip-l"), ("peek", "hand-grip-r")):
+                piece, ledge = erase_ledge(piece)
+                print(f"  {name}: ledge at {ledge:.3f} of height")
             export(piece, group, name)
         print(f"{group}/ {len(pieces)} pieces from {prefix}")
 
