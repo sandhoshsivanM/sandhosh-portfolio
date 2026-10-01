@@ -41,6 +41,7 @@ ASSETS = {
     "2C37D240": ("avatar", "boy", ALPHA),
     "7C143548": ("avatar", "hand", ALPHA),
     "4148EFB5": ("avatar", "boy-controller", ALPHA),
+    "F8C5D08C": ("avatar", "head", ALPHA),
     # doodles
     "88A6E0ED": ("doodles", "pencil", ALPHA),
     "50280CFD": ("doodles", "bulb", ALPHA),
@@ -180,6 +181,11 @@ def split(im: Image.Image, gap: int, keep: float = 0.08) -> list[Image.Image]:
     return [p[2] for r in rows for p in sorted(r, key=lambda t: t[1])]
 
 
+# Horizontal crops (fractions of the exported width) applied after trimming.
+# peek: the drawing's ledge line runs past the hands; the site's wall edge is the ledge.
+CROPS = {("peek", "peek"): (0.13, 0.895)}
+
+
 def raw(prefix: str) -> Path:
     return next(p for p in sorted(RAW.glob(f"{prefix}*.PNG")) if not p.stem.endswith(" 2"))
 
@@ -193,7 +199,11 @@ def main() -> None:
         pieces = split(Image.open(raw(prefix)).convert("RGBA"), gap, *keep)
         assert len(pieces) == len(names), f"{prefix}: {len(pieces)} pieces, {len(names)} names"
         for name, piece in zip(names, pieces):
-            export(trim(piece), group, name)
+            piece = trim(piece)
+            if (group, name) in CROPS:
+                lo, hi = CROPS[(group, name)]
+                piece = piece.crop((round(piece.width * lo), 0, round(piece.width * hi), piece.height))
+            export(piece, group, name)
         print(f"{group}/ {len(pieces)} pieces from {prefix}")
 
 

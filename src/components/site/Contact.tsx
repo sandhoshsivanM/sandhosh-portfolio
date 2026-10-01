@@ -6,37 +6,64 @@ import { profile } from "@/content/profile";
 import { stickerBurst } from "@/lib/confetti";
 import { ease } from "@/lib/motion";
 
-type Status = "idle" | "sending" | "sent" | "error";
+type Status = "idle" | "sent";
+
+/** Clipboard API first; the hidden-textarea fallback covers browsers and contexts where it is unavailable. */
+async function copyText(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    Object.assign(ta.style, { position: "fixed", top: "0", left: "0", opacity: "0" });
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch {}
+    ta.remove();
+    return ok;
+  }
+}
 
 export function Contact() {
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
 
   const copy = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    try {
-      await navigator.clipboard.writeText(profile.email);
-    } catch {
+    const r = e.currentTarget.getBoundingClientRect();
+    if (!(await copyText(profile.email))) {
       window.location.href = `mailto:${profile.email}`;
       return;
     }
-    const r = e.currentTarget.getBoundingClientRect();
     stickerBurst(r.left + r.width / 2, r.top);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2200);
   };
 
-  const submit = async (e: FormEvent<HTMLFormElement>) => {
+  // No mail server: the note opens as a Gmail draft addressed to me, already filled in.
+  const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    setStatus("sending");
-    try {
-      const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
-      if (!res.ok) throw new Error();
-      setStatus("sent");
-      form.reset();
-    } catch {
-      setStatus("error");
+    const data = new FormData(e.currentTarget);
+    const name = String(data.get("name") ?? "").trim();
+    const from = String(data.get("email") ?? "").trim();
+    const message = String(data.get("message") ?? "").trim();
+    const params = new URLSearchParams({
+      view: "cm",
+      fs: "1",
+      to: profile.email,
+      su: `Hello from ${name}`,
+      body: `${message}\n\n— ${name}\n${from}`,
+    });
+    const tab = window.open(`https://mail.google.com/mail/?${params}`, "_blank", "noopener");
+    if (!tab) {
+      // pop-up blocked: fall back to the visitor's default mail app
+      window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(`Hello from ${name}`)}&body=${encodeURIComponent(`${message}\n\n— ${name}\n${from}`)}`;
     }
+    setStatus("sent");
   };
 
   return (
@@ -46,13 +73,15 @@ export function Contact() {
           {/* Banner composition, drawn to the "Let's build" mockup */}
           <motion.div className="relative mt-24 w-[min(760px,100%)] md:mt-32" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }}>
             <h2 className="sr-only">Let&apos;s build together</h2>
-            {/* the boy leans over the banner, hands on its top edge */}
+            {/* my head peeks over the banner from behind it, like the hero; the banner's paper hides the rest */}
             <motion.div
               aria-hidden
-              className="absolute bottom-[78%] left-1/2 w-[46%] -translate-x-[58%]"
-              variants={{ hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 150, damping: 15, delay: 0.35 } } }}
+              className="absolute bottom-[66%] left-1/2 w-[30%] -translate-x-1/2"
+              variants={{ hidden: { opacity: 0, y: "35%" }, show: { opacity: 1, y: "0%", transition: { type: "spring", stiffness: 150, damping: 14, delay: 0.35 } } }}
             >
-              <Image src="/assets/contact/boy-point.webp" alt="" width={540} height={440} className="h-auto w-full" />
+              <div className="float-y">
+                <Image src="/assets/avatar/head-sm.webp" alt="" width={400} height={373} className="h-auto w-full -rotate-3" />
+              </div>
             </motion.div>
             <motion.div
               aria-hidden
@@ -138,10 +167,9 @@ export function Contact() {
               Message
               <textarea name="message" required rows={4} maxLength={4000} className="rounded-xl border-[1.5px] border-ink bg-white px-4 py-3 text-[16px] font-normal outline-none focus:border-frame" />
             </label>
-            <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
             <div className="flex flex-wrap items-center gap-4">
-              <button type="submit" disabled={status === "sending"} className="btn btn-ink relative overflow-visible disabled:opacity-60">
-                {status === "sending" ? "Sending…" : "Send it"}
+              <button type="submit" className="btn btn-ink relative overflow-visible">
+                Open in Gmail <span aria-hidden>↗</span>
                 <AnimatePresence>
                   {status === "sent" && (
                     <motion.span aria-hidden className="absolute right-0 top-0" initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }} animate={{ x: 260, y: -160, opacity: 0, rotate: 20 }} transition={{ duration: 1, ease }}>
@@ -150,17 +178,8 @@ export function Contact() {
                   )}
                 </AnimatePresence>
               </button>
-              <p role="status" className="text-[14px]">
-                {status === "sent" && <span className="text-success">Sent. I&apos;ll reply soon.</span>}
-                {status === "error" && (
-                  <span className="text-accent">
-                    That didn&apos;t send. Please email me at{" "}
-                    <a className="underline" href={`mailto:${profile.email}`}>
-                      {profile.email}
-                    </a>
-                    .
-                  </span>
-                )}
+              <p role="status" className="text-[14px] text-ink-2">
+                {status === "sent" ? <span className="text-success">Your draft is open in Gmail. Hit send there.</span> : "Opens a ready-to-send draft to me in Gmail."}
               </p>
             </div>
           </form>
