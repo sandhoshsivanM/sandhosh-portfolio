@@ -29,7 +29,7 @@ export function ErpModules() {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ ...springPop, stiffness: 170, delay: (i % 3) * 0.08 }}
             >
-              <article className="erp-card relative flex w-full flex-col px-6 pb-5 pt-7">
+              <article className="erp-card relative flex w-full min-w-0 flex-col px-4 pb-5 pt-7 min-[380px]:px-6">
                 <motion.span
                   aria-hidden
                   className={`tape tape-${(i % 4) + 1} -top-5 left-1/2 z-10 -ml-[70px] !h-[40px] !w-[140px]`}
@@ -56,7 +56,7 @@ export function ErpModules() {
                 </h3>
                 <p className="mt-2 font-print text-[19px] leading-snug text-ink">{m.line}</p>
                 {m.note && (
-                  <a href="#about" className="mt-1 w-fit font-hand text-[20px] text-accent link-draw">
+                  <a href="#about" className="mt-1 flex min-h-11 w-fit items-center font-hand text-[20px] text-accent link-draw">
                     ↖ {m.note}
                   </a>
                 )}
@@ -102,7 +102,7 @@ function Ticks({ className = "", color = "#ffc53d", flip }: { className?: string
 }
 
 function Label({ children }: { children: ReactNode }) {
-  return <p className="pr-16 font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-[#1d2433]">{children}</p>;
+  return <p className="pr-14 font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-[#1d2433] min-[380px]:text-[13px] min-[380px]:tracking-[0.12em]">{children}</p>;
 }
 
 const box = "border-[1.5px] border-[#1d2433]";
@@ -124,8 +124,8 @@ function Screen({ kind }: { kind: ErpScreen }) {
                 />
               ))}
             </motion.div>
-            <div className="relative w-[72px] text-center">
-              <Ticks className="-right-4 -top-5" />
+            <div className="relative w-[64px] shrink-0 text-center min-[380px]:w-[72px]">
+              <Ticks className="-right-3 -top-5 max-[379px]:hidden" />
               <span className="block font-display text-[30px] font-extrabold leading-none">
                 <Highlight>96%</Highlight>
               </span>
@@ -149,14 +149,14 @@ function Screen({ kind }: { kind: ErpScreen }) {
             ].map(([s, c], i) => (
               <div key={s} className="flex items-center gap-1">
                 <motion.span
-                  className={`grid h-12 w-12 place-items-center rounded-[10px] font-mono text-[13px] font-bold text-[#1d2433] ${box}`}
+                  className={`grid h-10 w-10 place-items-center rounded-[10px] font-mono text-[11px] font-bold text-[#1d2433] min-[380px]:h-12 min-[380px]:w-12 min-[380px]:text-[13px] ${box}`}
                   style={{ background: c }}
                   {...show}
                   variants={{ hidden: { y: 0 }, show: { y: [0, -8, 0], transition: { delay: 0.3 + i * 0.3, duration: 0.45 } } }}
                 >
                   {s}
                 </motion.span>
-                {i < 3 && <span className="text-[18px] font-bold text-[#1d2433]">→</span>}
+                {i < 3 && <span className="text-[15px] font-bold text-[#1d2433] min-[380px]:text-[18px]">→</span>}
               </div>
             ))}
           </div>

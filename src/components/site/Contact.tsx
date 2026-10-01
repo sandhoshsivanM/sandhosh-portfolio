@@ -71,7 +71,7 @@ export function Contact() {
       <div className="container-page">
         <div className="relative flex flex-col items-center text-center">
           {/* Banner composition, drawn to the "Let's build" mockup */}
-          <motion.div className="relative mt-24 w-[min(760px,100%)] md:mt-32" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }}>
+          <motion.div className="relative mt-16 w-[min(760px,100%)] sm:mt-24 md:mt-32" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }}>
             <h2 className="sr-only">Let&apos;s build together</h2>
             <motion.div
               aria-hidden
@@ -92,7 +92,7 @@ export function Contact() {
             </motion.div>
             <motion.div
               aria-hidden
-              className="absolute -bottom-[18%] -right-[4%] w-[38%]"
+              className="absolute -bottom-[18%] right-0 w-[38%] lg:-right-[4%]"
               variants={{ hidden: { clipPath: "inset(-10% 100% -10% 0%)" }, show: { clipPath: "inset(-10% 0% -10% 0%)", transition: { duration: 0.7, ease: "easeInOut", delay: 0.8 } } }}
             >
               <Image src="/assets/contact/together.webp" alt="" width={585} height={297} className="h-auto w-full" />
@@ -120,9 +120,9 @@ export function Contact() {
             <button
               type="button"
               onClick={copy}
-              className="flex min-h-14 items-center gap-3 rounded-[14px] border-2 border-ink bg-[#1a1d24] py-2 pl-2 pr-2 font-mono text-[14px] text-white shadow-[4px_5px_0_var(--color-accent)] transition-transform hover:-translate-y-0.5 active:translate-y-0.5 md:text-[17px]"
+              className="flex min-h-14 max-w-full items-center gap-2 rounded-[14px] border-2 border-ink bg-[#1a1d24] py-2 pl-2 pr-2 font-mono text-[12.5px] text-white min-[380px]:gap-3 min-[380px]:text-[14px] shadow-[4px_5px_0_var(--color-accent)] transition-transform hover:-translate-y-0.5 active:translate-y-0.5 md:text-[17px]"
             >
-              <span aria-hidden className="grid h-10 w-10 place-items-center rounded-[10px] bg-white/10">
+              <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-[10px] bg-white/10 max-[379px]:hidden">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="5" width="18" height="14" rx="2" />
                   <path d="M3 7l9 6 9-6" />

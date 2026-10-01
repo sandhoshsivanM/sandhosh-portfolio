@@ -1,6 +1,6 @@
 export const profile = {
   name: "Sandhoshsivan M",
-  short: "Sandhosh",
+  short: "Sandhoshsivan",
   signature: "Sandhoshsivan",
   role: "Backend Developer",
   sizeLabel: ".NET · Backend",

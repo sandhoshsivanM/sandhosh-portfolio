@@ -11,6 +11,6 @@ export const dream = {
     { label: "Join a game studio", done: false },
   ],
   // The games that made me want to make games.
-  // TODO: two more titles from Sandhosh (GTA and Ori and the Blind Forest removed at his request).
+  // TODO: two more titles from Sandhoshsivan (GTA and Ori and the Blind Forest removed at his request).
   played: ["Assassin's Creed", "Red Dead Redemption", "Ori and the Will of the Wisps"],
 };

@@ -35,7 +35,7 @@ export function About() {
                 <p key={i}>{i === 1 ? <Highlight text={p} mark="only backend engineer" /> : p}</p>
               ))}
               <div className="flex items-end justify-between pt-2">
-                <span className="font-sign text-[34px] text-accent">Sandhosh</span>
+                <span className="font-sign text-[30px] text-accent sm:text-[34px]">Sandhoshsivan</span>
                 <motion.div
                   className="w-12"
                   initial={{ filter: "grayscale(1) brightness(.9)", rotate: 0 }}
@@ -79,11 +79,11 @@ export function About() {
             <div className="sketch relative -rotate-2 p-3 pb-14">
               <span className="tape tape-3 -top-4 left-1/2 -ml-[60px] rotate-2" />
               <div className="aspect-square overflow-hidden border-2 border-ink bg-[linear-gradient(140deg,#ffd2bc,#d6e2ff)]">
-                <Image src="/assets/avatar/boy.webp" alt="Illustrated portrait of Sandhosh" width={936} height={1024} className="mx-auto mt-6 h-auto w-[86%]" />
+                <Image src="/assets/avatar/boy.webp" alt="Illustrated portrait of Sandhoshsivan" width={936} height={1024} className="mx-auto mt-6 h-auto w-[86%]" />
               </div>
               <figcaption className="absolute inset-x-0 bottom-3 text-center font-hand text-[24px]">me, off the clock</figcaption>
             </div>
-            <Image src="/assets/game/gamepad.webp" alt="" width={438} height={318} className="absolute -left-3 top-6 w-20 -rotate-12 drop-shadow-md sm:-left-8" />
+            <Image src="/assets/game/gamepad.webp" alt="" width={438} height={318} className="absolute left-0 top-6 w-16 -rotate-12 drop-shadow-md sm:-left-8 sm:w-20" />
             <Image src="/assets/game/star.webp" alt="" width={224} height={234} className="absolute -right-2 top-1/3 w-12 rotate-12 drop-shadow-md sm:-right-6" />
             <Image src="/assets/doodles/sparkle-sm.webp" alt="" width={400} height={371} className="absolute -bottom-4 right-4 w-10 drop-shadow-md" />
           </motion.figure>

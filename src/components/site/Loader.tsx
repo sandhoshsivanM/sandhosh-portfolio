@@ -104,12 +104,12 @@ export function Loader() {
             </div>
             <div className="relative mt-4 h-16">
               <motion.p
-                className="absolute inset-x-0 text-center font-sign text-5xl text-ink"
+                className="absolute inset-x-0 text-center font-sign text-[40px] text-ink sm:text-5xl"
                 initial={{ clipPath: "inset(0 100% 0 0)" }}
                 animate={signed ? { clipPath: "inset(0 0% 0 0)" } : undefined}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
               >
-                Sandhosh
+                Sandhoshsivan
               </motion.p>
               <motion.div
                 className="absolute top-0 w-24"

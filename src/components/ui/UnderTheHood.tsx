@@ -10,7 +10,7 @@ export function UnderTheHood({ items, dark }: { items: string[]; dark?: boolean 
       </summary>
       <div className="flex flex-wrap gap-1.5 pb-1">
         {items.map((t) => (
-          <span key={t} className={dark ? "chip border-white/15 bg-white/5 text-white/80" : "chip"}>
+          <span key={t} className={`chip max-w-full !whitespace-normal ${dark ? "border-white/15 bg-white/5 text-white/80" : ""}`}>
             {t}
           </span>
         ))}

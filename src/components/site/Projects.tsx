@@ -26,7 +26,7 @@ export function Projects() {
                   <h3 className="font-display text-[30px] font-extrabold tracking-tight">{p.name}</h3>
                   <p className="mt-1 text-[18px] font-semibold">{p.pitch}</p>
                   {p.why && (
-                    <a href="#about" className="mt-2 font-hand text-[21px] leading-snug text-accent">
+                    <a href="#about" className="mt-2 block py-2 font-hand text-[21px] leading-snug text-accent">
                       {p.why}
                     </a>
                   )}
