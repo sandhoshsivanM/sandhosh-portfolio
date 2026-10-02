@@ -30,15 +30,16 @@ export function CaseNotes() {
                 <span className={`tape tape-${(i % 3) + 2} -top-4 left-6 -rotate-3`} />
                 <motion.div
                   aria-hidden
-                  className="absolute -right-3 -top-5 w-16 md:w-20"
+                  className={`absolute h-16 w-auto md:h-20 ${n.wide ? "-right-4 -top-6" : "-right-3 -top-5"}`}
                   initial={{ scale: 0, rotate: -30 }}
                   whileInView={{ scale: 1, rotate: 8 }}
                   viewport={{ once: true }}
                   transition={{ ...springPop, delay: 0.5 }}
                 >
-                  <Image src={n.doodle.replace(".webp", "-sm.webp")} alt="" width={200} height={200} className="h-auto w-full drop-shadow-md" />
+                  {/* sized by height so square stickers and wide doodles carry the same weight */}
+                  <Image src={n.doodle.replace(".webp", "-sm.webp")} alt="" width={n.wide ? 400 : 200} height={n.wide ? 213 : 200} className="h-full w-auto max-w-none drop-shadow-md" />
                 </motion.div>
-                <div className="flex items-start gap-2 pr-12">
+                <div className={`flex items-start gap-2 ${n.wide ? "pr-28 md:pr-36" : "pr-12"}`}>
                   <Image src="/assets/doodles/star-sm.webp" alt="" width={40} height={38} className="mt-1 w-6 shrink-0" />
                   <h3 className="font-display text-[clamp(26px,3vw,36px)] font-extrabold leading-[1.05] tracking-tight">{n.result}</h3>
                 </div>
