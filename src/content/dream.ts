@@ -3,6 +3,12 @@ export const dream = {
   rookie: "Rookie game developer · one game shipped",
   game: "Sun of Elegance",
   card: "My first game: a 2D platformer I built from scratch. I'm still a rookie, but I wrote the physics, the controls and the sound myself.",
+  // Quick-read stats on the cartridge label; all of these are also in `hood`.
+  stats: [
+    { k: "Engine", v: "MonoGame" },
+    { k: "Lang", v: "C# / .NET 9" },
+    { k: "Tests", v: "42" },
+  ],
   hood: ["C# / .NET 9", "MonoGame", "swept-AABB collision", "player state machine", "procedural audio", "42 unit tests", "CI on Windows, macOS, Linux"],
   quests: [
     { label: "Ship my first game", done: true },

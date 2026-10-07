@@ -114,9 +114,11 @@ export function Hero() {
               <motion.div
                 ref={faceRef}
                 className="absolute bottom-0 left-[16%] w-[66%]"
-                initial={{ y: "95%" }}
+                // Starts fully below the clip edge and rises only once the wall has faded in,
+                // so no tuft of hair floats over an empty wall during the intro.
+                initial={{ y: "110%" }}
                 animate={ready ? { y: HEAD_PEEK } : undefined}
-                transition={{ type: "spring", stiffness: 120, damping: 14, delay: 0.5 }}
+                transition={{ type: "spring", stiffness: 120, damping: 14, delay: 0.65 }}
               >
                 <motion.div
                   animate={ready && !reduce ? { y: ["0%", "0%", "-12%", "-12%", "0%"] } : undefined}

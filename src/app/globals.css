@@ -428,6 +428,10 @@ html {
     opacity: 0;
   }
 }
+/* PRESS START and the power LED on the Player 2 console. */
+.blink {
+  animation: caret 1.2s steps(1) infinite;
+}
 .caret::after {
   content: "▍";
   margin-left: 2px;
@@ -449,7 +453,8 @@ html {
   .ticker-track,
   .float-y,
   .drift,
-  .scan {
+  .scan,
+  .blink {
     animation: none;
   }
 }
