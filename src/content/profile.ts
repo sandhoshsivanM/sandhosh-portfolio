@@ -11,21 +11,22 @@ export const profile = {
   links: {
     linkedin: "https://linkedin.com/in/sandhoshsivan-m",
     github: "https://github.com/sandhoshsivanM",
+    leetcode: "https://leetcode.com/u/Sandhoshsivan/",
     resume: "/resume.pdf",
   },
   ticker: [
     "Sandhoshsivan M",
-    ".NET Backend Developer",
+    "Backend Developer (.NET)",
     "Coimbatore, India",
     "Open to new roles",
     "Rookie game developer",
   ],
   seo: {
-    title: "Sandhoshsivan M · .NET Backend Developer",
+    title: "Sandhoshsivan M · Backend Developer (.NET)",
     description: "I build the backend a 2,000-person company runs on, and games at night.",
   },
   hurry: [
-    ["Role", ".NET backend developer"],
+    ["Role", "Backend developer (.NET)"],
     ["Experience", "2.5+ years, since March 2024"],
     ["Best work", "Sole backend engineer on a 28-module ERP for 2,000+ people"],
     ["Availability", "Open to new roles · Chennai, Bangalore or remote"],
