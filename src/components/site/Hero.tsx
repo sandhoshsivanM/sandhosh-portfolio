@@ -213,6 +213,12 @@ export function Hero() {
         <a href="#contact" className="btn btn-ghost">
           Say hello
         </a>
+        {/* Coding profiles up top, where a reviewer looks first. */}
+        <p className="col-span-2 flex flex-wrap justify-center gap-x-5 gap-y-1 pt-1 font-mono text-[14px] sm:basis-full">
+          <a href={profile.links.leetcode} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-accent">LeetCode ↗</a>
+          <a href={profile.links.github} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-accent">GitHub ↗</a>
+          <a href={profile.links.linkedin} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-accent">LinkedIn ↗</a>
+        </p>
       </motion.div>
     </section>
   );
